@@ -381,6 +381,10 @@ generate_readme() {
                 skip_quality=true
                 shift
                 ;;
+            --auto-run)
+                # Internal flag - just ignore it as it's already handled in main()
+                shift
+                ;;
             *)
                 print_error "Unknown option: $1"
                 show_usage
@@ -598,18 +602,34 @@ install_remote() {
     
     chmod +x generate
     print_success "Script installed as ./generate"
-    print_info "Run ./generate to create your README"
+    
+    # Check if we're in an interactive session (TTY)
+    if [[ -t 1 ]]; then
+        # Interactive session - auto-run the generator
+        print_info "Detected interactive session. Running generator now..."
+        echo
+        # Pass a special flag to indicate this is an auto-run
+        exec ./generate --auto-run "$@"
+    else
+        # Non-interactive (CI) session - just download and show next steps
+        print_info "Downloaded in non-interactive session."
+        print_info "Next step: Run './generate' to create your README"
+    fi
 }
 
 # Main execution
 main() {
-    # If script is being piped from curl, install it first
-    if [[ -t 0 ]]; then
-        # Running normally
+    # Check for auto-run flag (indicates this is being run after installation)
+    if [[ "$1" == "--auto-run" ]]; then
+        # Remove the auto-run flag and run generator directly
+        shift
+        generate_readme "$@"
+    elif [[ -t 0 ]]; then
+        # Running normally (stdin is a terminal)
         generate_readme "$@"
     else
-        # Being piped from curl
-        install_remote
+        # Being piped from curl (stdin is not a terminal)
+        install_remote "$@"
     fi
 }
 
