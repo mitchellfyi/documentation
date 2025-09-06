@@ -125,6 +125,76 @@ EOF
     print_success "Created $CONTEXT_FILE"
 }
 
+# Function to create docs scaffold with minimal content
+create_docs_scaffold() {
+    print_info "Creating docs scaffold..."
+    
+    # Create docs directory if it doesn't exist
+    mkdir -p docs
+    
+    # Define the files to create with their basic headings
+    declare -A docs_files=(
+        ["docs/QUICKSTART.md"]="# Quickstart"
+        ["docs/USAGE.md"]="# Usage"
+        ["docs/INSTALL.md"]="# Installation"
+        ["docs/CONFIGURATION.md"]="# Configuration"
+        ["docs/ARCHITECTURE.md"]="# Architecture"
+        ["docs/ROADMAP.md"]="# Roadmap"
+        ["docs/CONTRIBUTING.md"]="# Contributing"
+        ["docs/CODE_OF_CONDUCT.md"]="# Code of Conduct"
+        ["docs/SECURITY.md"]="# Security"
+    )
+    
+    local created_files=()
+    local skipped_files=()
+    
+    # Create each file if it doesn't exist or is empty
+    for file in "${!docs_files[@]}"; do
+        if [[ -f "$file" && -s "$file" ]]; then
+            # File exists and is non-empty, skip it
+            skipped_files+=("$file")
+            print_warning "Skipped $file (non-empty file exists)"
+        else
+            # File doesn't exist or is empty, create it
+            echo "${docs_files[$file]}" > "$file"
+            created_files+=("$file")
+            print_success "Created $file"
+        fi
+    done
+    
+    # Create context.yaml if it doesn't exist
+    if [[ ! -f "$CONTEXT_FILE" ]]; then
+        # This shouldn't happen in normal flow, but handle edge case
+        print_warning "$CONTEXT_FILE missing, creating placeholder"
+        cat > "$CONTEXT_FILE" << EOF
+project: [Your Project Name]
+domain: [project domain]
+audience: [target audience]
+interfaces: [interfaces]
+runtime: [runtime requirements]
+storage: [storage backends]
+deployment: [deployment targets]
+status: [project status]
+license: [license]
+support: [support channel]
+EOF
+        created_files+=("$CONTEXT_FILE")
+        print_success "Created $CONTEXT_FILE"
+    fi
+    
+    echo
+    if [[ ${#created_files[@]} -gt 0 ]]; then
+        print_success "Docs scaffold created! Files added:"
+        printf '  %s\n' "${created_files[@]}"
+    fi
+    
+    if [[ ${#skipped_files[@]} -gt 0 ]]; then
+        echo
+        print_info "Existing files preserved:"
+        printf '  %s\n' "${skipped_files[@]}"
+    fi
+}
+
 # Clean up template-specific content
 clean_template_content() {
     print_info "Cleaning up template-specific content..."
@@ -286,6 +356,7 @@ generate_readme() {
     local use_remote=false
     local force=false
     local skip_quality=false
+    local docs_scaffold_created=false
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -458,8 +529,22 @@ generate_readme() {
 
     print_success "README.md generated successfully!"
     
+    # Ask user if they want to create docs scaffold
+    echo
+    echo -n "Create docs scaffold now? [Y/n]: "
+    read -r create_docs_response
+    if [[ "$create_docs_response" =~ ^[Nn]$ ]]; then
+        print_info "Skipped docs scaffold creation"
+        docs_scaffold_created=false
+    else
+        echo
+        create_docs_scaffold
+        docs_scaffold_created=true
+    fi
+    
     # Run quality checks on the generated README (unless skipped)
     if [[ "$skip_quality" != true ]]; then
+        echo
         run_quality_checks
     else
         print_info "Quality checks skipped (--skip-quality flag used)"
@@ -470,8 +555,22 @@ generate_readme() {
     echo "  📝 Review and customize the generated README.md"
     echo "  🔍 Search for remaining [placeholders] and replace them"
     echo "  🧹 Run 'scripts/check-quality.sh' for comprehensive quality checks"
-    echo "  📁 Create docs/ structure if needed:"
-    echo "     mkdir -p docs && touch docs/{QUICKSTART,USAGE,INSTALL,CONFIGURATION,ARCHITECTURE,ROADMAP,CONTRIBUTING,CODE_OF_CONDUCT,SECURITY}.md"
+    if [[ "$docs_scaffold_created" == true ]]; then
+        echo "  📁 Customize your docs structure:"
+        echo "     📖 docs/QUICKSTART.md - Quick start guide for new users"
+        echo "     📚 docs/USAGE.md - Detailed usage instructions"
+        echo "     ⚙️  docs/INSTALL.md - Installation instructions"
+        echo "     🔧 docs/CONFIGURATION.md - Configuration options"
+        echo "     🏗️  docs/ARCHITECTURE.md - System architecture"
+        echo "     🛣️  docs/ROADMAP.md - Project roadmap"
+        echo "     🤝 docs/CONTRIBUTING.md - Contribution guidelines"
+        echo "     📋 docs/CODE_OF_CONDUCT.md - Code of conduct"
+        echo "     🔒 docs/SECURITY.md - Security policy"
+    else
+        echo "  📁 Create docs/ structure if needed:"
+        echo "     Re-run ./generate to create docs scaffold, or manually:"
+        echo "     mkdir -p docs && touch docs/{QUICKSTART,USAGE,INSTALL,CONFIGURATION,ARCHITECTURE,ROADMAP,CONTRIBUTING,CODE_OF_CONDUCT,SECURITY}.md"
+    fi
     echo "  📄 Add LICENSE file if needed"
     
     # Show remaining placeholders
