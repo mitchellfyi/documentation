@@ -282,24 +282,65 @@ If `.markdownlint.jsonc`, `.vale.ini`, or `cspell.json` are missing, create mini
 
 ## Git and PR workflow
 
-- **Branch naming**:
-  - `docs/<slug>` - for documentation changes
-  - `feature/<slug>` - for new features or tools
-  - `bugfix/<slug>` - for bug fixes
-- **Commit messages**: Conventional Commits for clarity, e.g.
-  - `docs: add quickstart checklists`
-  - `docs: fix broken diataxis link`
-  - `feat: add new documentation generator`
-  - `fix: resolve link checker timeout issue`
+### Branch naming conventions
 
-- **PR checklist**:
-  - Summary and rationale
-  - What changed and why
-  - Evidence: lints/spell/link checks passing (paste condensed output)
-  - Backwards-compatibility of anchors confirmed
-  - “References” updated if you cite new sources
+Use descriptive branch names following these patterns:
 
----
+- **`feature/<slug>`** - for new features or tools
+  - Examples: `feature/add-vale-integration`, `feature/cli-improvements`
+- **`bugfix/<slug>`** - for bug fixes
+  - Examples: `bugfix/broken-links`, `bugfix/script-timeout-issues`
+- **`docs/<slug>`** - for documentation changes
+  - Examples: `docs/update-contributing`, `docs/fix-readme-typos`
+
+Where `<slug>` is a short, descriptive identifier using kebab-case.
+
+### Conventional Commits format
+
+All commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+```text
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Required types:**
+
+- `feat:` - new feature for the user
+- `fix:` - bug fix for the user
+- `docs:` - changes to documentation
+- `style:` - formatting, missing semicolons, etc (no code change)
+- `refactor:` - refactoring production code
+- `test:` - adding missing tests, refactoring tests (no production code change)
+- `chore:` - updating build tasks, package manager configs, etc (no production code change)
+
+**Examples:**
+
+- `docs: add quickstart checklists`
+- `docs: fix broken diataxis link`
+- `feat: add new documentation generator`
+- `feat(cli): add --skip-quality flag to generate script`
+- `fix: resolve link checker timeout issue`
+- `fix(scripts): handle missing Vale installation gracefully`
+- `chore: update markdownlint configuration`
+- `refactor: simplify quality check pipeline`
+
+**Breaking changes:** Add `!` after type/scope or include `BREAKING CHANGE:` in footer.
+
+### PR requirements and checklist
+
+Every pull request must include:
+
+- **Summary and rationale** - clear description of what changed and why
+- **Quality evidence** - proof that all quality gates pass
+- **Backwards compatibility** - confirmation that anchors/links remain valid
+- **Issue linkage** - reference to related issues using GitHub keywords
+- **Documentation updates** - update to AGENTS.md if workflow/setup changes
+
+**Detailed checklist available in PR template** - see `.github/pull_request_template.md`---
 
 ## Security and safety
 
