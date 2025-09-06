@@ -410,6 +410,190 @@ npm install
 
 ---
 
+## Agent Command Blocks (Copy and Execute)
+
+### Pre-task Setup Block
+
+**Copy this entire block and execute verbatim before starting any task:**
+
+```bash
+#!/bin/bash
+# Pre-task setup for agents working on documentation repository
+# Execute this entire block before making any changes
+
+echo "🚀 Pre-task setup: Loading AGENTS.md, setting up environment, installing dependencies, verifying build"
+
+# 1. Load and verify AGENTS.md exists
+echo "1️⃣  Loading AGENTS.md..."
+if [[ ! -f "AGENTS.md" ]]; then
+    echo "❌ AGENTS.md not found. Ensure you're in the correct repository root."
+    exit 1
+fi
+echo "✅ AGENTS.md loaded - $(wc -l < AGENTS.md) lines of guidance available"
+
+# 2. Set up environment
+echo "2️⃣  Setting up environment..."
+# Verify Node.js and npm are available
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ Node.js not found. This repository requires Node 20+."
+    exit 1
+fi
+if ! command -v npm >/dev/null 2>&1; then
+    echo "❌ npm not found. This repository requires npm for tooling."
+    exit 1
+fi
+echo "✅ Node.js $(node --version) and npm $(npm --version) available"
+
+# 3. Install dependencies (on-demand via npx, no package.json in this repo)
+echo "3️⃣  Verifying tooling dependencies..."
+echo "   Dependencies are installed on-demand via npx (prettier, markdownlint-cli2, cspell)"
+echo "   Vale prose linter: $(command -v vale >/dev/null 2>&1 && echo 'installed' || echo 'not installed (optional)')"
+echo "✅ Tooling verified"
+
+# 4. Verify build (documentation generation)
+echo "4️⃣  Verifying build (documentation generation)..."
+if [[ ! -x "./generate" ]]; then
+    echo "❌ Generate script not executable or not found"
+    exit 1
+fi
+if ! timeout 120s ./generate --help >/dev/null; then
+    echo "❌ Generate script failed"
+    exit 1
+fi
+echo "✅ Generate script verified"
+
+# 5. Check current repository state
+echo "5️⃣  Checking current repository state..."
+# Run baseline quality check (allow failures for pre-existing issues)
+timeout 30s npx prettier . --check >/dev/null 2>&1 && \
+    echo "✅ Formatting clean" || echo "⚠️  Formatting issues exist (may be pre-existing)"
+timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules" >/dev/null 2>&1 && \
+    echo "✅ Markdown linting clean" || echo "⚠️  Markdown linting issues exist (may be pre-existing)"
+timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB >/dev/null 2>&1 && \
+    echo "✅ Spelling clean" || echo "⚠️  Spelling issues exist (may be pre-existing)"
+
+echo "🎉 Pre-task setup complete! You can now begin making changes."
+echo "📖 Remember to make minimal, incremental changes and test frequently."
+```
+
+### Post-task Validation Block
+
+**Copy this entire block and execute verbatim after completing any task:**
+
+```bash
+#!/bin/bash
+# Post-task validation for agents working on documentation repository
+# Execute this entire block after making changes, before submitting PR
+
+echo "🔍 Post-task validation: Running tests, linting, build verification, preparing commit and PR"
+
+# Track overall success
+VALIDATION_SUCCESS=true
+
+# 1. Run complete quality pipeline
+echo "1️⃣  Running complete quality pipeline..."
+# Note: Pre-existing markdown lint and spell check errors are expected per AGENTS.md guidance
+# Only fail on critical issues like formatting problems
+if timeout 300s scripts/check-quality.sh >/dev/null 2>&1; then
+    echo "✅ Quality pipeline passed completely"
+else
+    # Check individual components to identify specific failures
+    echo "⚠️  Quality pipeline had some issues - checking individual components..."
+
+    # Formatting is critical and must pass
+    if ! timeout 30s npx prettier . --check >/dev/null 2>&1; then
+        echo "❌ Formatting failures detected - this must be fixed"
+        VALIDATION_SUCCESS=false
+    else
+        echo "✅ Formatting is clean"
+    fi
+
+    # Markdown linting and spell check have pre-existing errors that are acceptable
+    timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules" >/dev/null 2>&1 && \
+        echo "✅ Markdown linting clean" || echo "⚠️  Markdown linting issues (may be pre-existing, acceptable)"
+
+    timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB >/dev/null 2>&1 && \
+        echo "✅ Spell checking clean" || echo "⚠️  Spell checking issues (may be pre-existing, acceptable)"
+
+    echo "ℹ️  Per AGENTS.md: 84 markdown errors and spelling issues are pre-existing and acceptable"
+fi
+
+# 2. Verify generate script still works (build verification)
+echo "2️⃣  Verifying build (generate script functionality)..."
+cd /tmp && mkdir -p agent-test-build && cd agent-test-build
+if cp /home/runner/work/documentation/documentation/generate . &&
+   cp /home/runner/work/documentation/documentation/README-TEMPLATE.md . 2>/dev/null || true; then
+    if timeout 120s ./generate --help >/dev/null; then
+        echo "✅ Generate script build verification passed"
+    else
+        echo "❌ Generate script build verification failed"
+        VALIDATION_SUCCESS=false
+    fi
+else
+    echo "❌ Could not set up build verification test"
+    VALIDATION_SUCCESS=false
+fi
+cd - >/dev/null
+
+# 3. Check for unintended changes (back in repository directory)
+echo "3️⃣  Checking for unintended changes..."
+# Show what files have been modified
+if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
+    MODIFIED_FILES=$(git diff --name-only)
+    if [[ -n "$MODIFIED_FILES" ]]; then
+        echo "📝 Modified files:"
+        echo "$MODIFIED_FILES" | sed 's/^/   /'
+
+        # Check if any forbidden files were modified
+        FORBIDDEN_PATTERN="^(LICENSE|generate|\.github/.*\.yml|.*\.ini|.*\.json)$"
+        if echo "$MODIFIED_FILES" | grep -E "$FORBIDDEN_PATTERN" >/dev/null; then
+            echo "⚠️  Warning: Modified files that typically shouldn't be changed:"
+            echo "$MODIFIED_FILES" | grep -E "$FORBIDDEN_PATTERN" | sed 's/^/   ❗ /'
+            echo "   Review these changes carefully"
+        fi
+    else
+        echo "ℹ️  No modified files detected"
+    fi
+else
+    echo "ℹ️  Not in a git repository or git not available - skipping git diff check"
+fi
+
+# 4. Prepare commit message guidance
+echo "4️⃣  Commit message guidance..."
+echo "📋 Use Conventional Commits format:"
+echo "   docs: <description>          # for documentation changes"
+echo "   feat: <description>          # for new features"
+echo "   fix: <description>           # for bug fixes"
+echo "   Examples:"
+echo "   - docs: add explicit pre-task and post-task command blocks"
+echo "   - docs: fix broken links in README"
+echo "   - feat: add new quality check script"
+
+# 5. PR body preparation guidance
+echo "5️⃣  PR body preparation..."
+echo "📋 Include in your PR description:"
+echo "   - Summary and rationale for changes"
+echo "   - Evidence that quality checks pass"
+echo "   - Confirmation that existing functionality is preserved"
+echo "   - Reference to related issues (e.g., 'Fixes #11')"
+
+# Final validation result
+echo ""
+if [[ "$VALIDATION_SUCCESS" = "true" ]]; then
+    echo "🎉 Post-task validation successful! Ready to commit and submit PR."
+    echo "💡 Next steps:"
+    echo "   1. Review your changes: git diff"
+    echo "   2. Stage changes: git add ."
+    echo "   3. Commit with conventional format: git commit -m 'docs: your message'"
+    echo "   4. Push and create PR with proper description"
+else
+    echo "💥 Post-task validation failed. Please fix issues above before submitting."
+    exit 1
+fi
+```
+
+---
+
 ## Task workflow for agents
 
 ### Before every task
