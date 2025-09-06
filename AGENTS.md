@@ -344,6 +344,10 @@ Every pull request must include:
 
 ## Security and safety
 
+**📋 Complete security policies**: See [SECURITY.md](SECURITY.md) for comprehensive security rules and sensitive path guidelines.
+
+**Key principles:**
+
 - Never commit secrets, tokens, or private URLs.
 - Do not instruct users to store secrets in VCS - always prefer environment variables or secret stores.
 - Avoid leaking personal data in examples; sanitise names, keys, and endpoints.
