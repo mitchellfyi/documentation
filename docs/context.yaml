@@ -1,0 +1,10 @@
+project: Docs - The Definitive Guide to Software Project Documentation
+domain: documentation framework
+audience: software developers, technical writers, project maintainers
+interfaces: templates, guides, checklists
+runtime: language-agnostic
+storage: filesystem, version control
+deployment: GitHub, documentation sites
+status: stable
+license: MIT
+support: GitHub Issues
