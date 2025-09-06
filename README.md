@@ -17,7 +17,7 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 The one-liner will:
 
 1. **Download the generator** - Automatically downloads the script
-2. **Auto-run in TTY** - In interactive sessions, starts Q&A immediately  
+2. **Auto-run in TTY** - In interactive sessions, starts Q&A immediately
 3. **Guide you through setup** - Interactive questions to create `docs/context.yaml`
 4. **Generate README.md** - Populated from template with your project details
 5. **Create docs scaffold** - Standard documentation structure
