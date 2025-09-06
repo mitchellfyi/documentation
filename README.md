@@ -7,19 +7,23 @@ A demo-first, language-agnostic guide that helps teams ship **clear, persuasive,
 Generate a production-grade README in 60 seconds with our CLI tool:
 
 ```bash
-# Remote usage (works in any project)
+# One-liner: downloads and runs automatically in interactive sessions
 curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
 
-# Or install locally and run
+# Or install locally and run manually
 ./generate
 ```
 
-The tool will:
+The one-liner will:
 
-1. **Guide you through setup** - Interactive questions to create `docs/context.yaml`
-2. **Generate README.md** - Populated from template with your project details
-3. **Create docs scaffold** - Standard documentation structure
-4. **Show next steps** - Remaining customizations needed
+1. **Download the generator** - Automatically downloads the script
+2. **Auto-run in TTY** - In interactive sessions, starts Q&A immediately
+3. **Guide you through setup** - Interactive questions to create `docs/context.yaml`
+4. **Generate README.md** - Populated from template with your project details
+5. **Create docs scaffold** - Standard documentation structure
+6. **Show next steps** - Remaining customizations needed
+
+> **CI/Non-interactive note**: In CI or non-TTY environments, the one-liner only downloads the script and shows next steps.
 
 ![CLI Demo](docs/assets/demo.gif)  
 <sub>Interactive README generation with guided questions</sub>
@@ -44,14 +48,17 @@ The tool will:
 
 ## Quickstart
 
-**Option 1: Use the CLI tool (recommended)**
+**One-liner (recommended)**
 
 ```bash
-# In any project directory
+# Downloads and auto-runs in interactive sessions
 curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
 ```
 
-**Option 2: Manual setup**
+> **Interactive sessions**: The one-liner downloads the script and immediately starts the Q&A.  
+> **CI/Non-TTY sessions**: The one-liner only downloads and shows next steps.
+
+**Manual setup**
 
 1. **Download and run the generator**
 
@@ -82,12 +89,17 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 The `generate` script works in any project directory:
 
 ```bash
-# Remote one-liner (installs and runs)
+# One-liner: downloads and auto-runs in interactive sessions
 curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
 
-# Or download first, then run
+# Or download first, then run manually
 ./generate [OPTIONS]
 ```
+
+**Behavior:**
+
+- **Interactive sessions (TTY)**: One-liner downloads script AND runs Q&A automatically
+- **CI/Non-interactive**: One-liner downloads script only, shows next step message
 
 **Options:**
 
