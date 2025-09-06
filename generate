@@ -1,0 +1,388 @@
+#!/bin/bash
+
+# generate - Universal README generator with guided setup
+# Can be used locally or remotely via curl
+
+set -e
+
+VERSION="1.0.0"
+TEMPLATE_URL="https://raw.githubusercontent.com/mitchellfyi/documentation/main/README-TEMPLATE.md"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Files
+TEMPLATE_FILE="README-TEMPLATE.md"
+CONTEXT_FILE="docs/context.yaml"
+OUTPUT_FILE="README.md"
+
+# Print colored output
+print_info() { echo -e "${BLUE}ℹ️  $1${NC}"; }
+print_success() { echo -e "${GREEN}✅ $1${NC}"; }
+print_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
+print_error() { echo -e "${RED}❌ $1${NC}"; }
+
+# Show usage
+show_usage() {
+    cat << EOF
+generate v$VERSION - Universal README generator
+
+USAGE:
+    ./generate [OPTIONS]
+
+OPTIONS:
+    -h, --help     Show this help
+    -v, --version  Show version
+    --remote       Use remote template (downloads from GitHub)
+    --force        Overwrite existing files without asking
+
+EXAMPLES:
+    # Local usage (in this repo)
+    ./generate
+
+    # Remote usage (in any project)
+    curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
+
+    # With remote template
+    ./generate --remote
+
+SETUP:
+    If no docs/context.yaml exists, the script will guide you through
+    creating one with interactive questions.
+
+EOF
+}
+
+# Function to extract value from YAML file
+get_yaml_value() {
+    local key="$1"
+    local file="$2"
+    grep "^${key}:" "$file" 2>/dev/null | sed "s/^${key}:[[:space:]]*//" | sed 's/^"//' | sed 's/"$//' || echo ""
+}
+
+# Function to ask user questions and create context.yaml
+create_context_file() {
+    print_info "Creating docs/context.yaml with guided questions..."
+    echo
+
+    # Create docs directory if it doesn't exist
+    mkdir -p docs
+
+    # Collect information
+    echo -n "Project name: "
+    read -r project_name
+    
+    echo -n "Domain (e.g., web app, CLI tool, data platform): "
+    read -r domain
+    
+    echo -n "Primary audience (e.g., developers, data engineers, SREs): "
+    read -r audience
+    
+    echo -n "Interfaces (e.g., CLI, REST API, SDK): "
+    read -r interfaces
+    
+    echo -n "Runtime requirements (e.g., Python 3.11+, Node 20+, language-agnostic): "
+    read -r runtime
+    
+    echo -n "Storage backends (e.g., Postgres, S3, filesystem): "
+    read -r storage
+    
+    echo -n "Deployment targets (e.g., Docker, K8s, GitHub): "
+    read -r deployment
+    
+    echo -n "Status (experimental, beta, stable, maintenance, archived): "
+    read -r status
+    
+    echo -n "License (e.g., MIT, Apache-2.0): "
+    read -r license
+    
+    echo -n "Support channel (e.g., GitHub Issues, email): "
+    read -r support
+
+    # Write context.yaml
+    cat > "$CONTEXT_FILE" << EOF
+project: $project_name
+domain: $domain
+audience: $audience
+interfaces: $interfaces
+runtime: $runtime
+storage: $storage
+deployment: $deployment
+status: $status
+license: $license
+support: $support
+EOF
+
+    print_success "Created $CONTEXT_FILE"
+}
+
+# Clean up template-specific content
+clean_template_content() {
+    print_info "Cleaning up template-specific content..."
+    
+    # Remove HTML comments (including multiline ones)
+    sed -i.bak '/<!--/,/-->/d' "$OUTPUT_FILE"
+    
+    # Remove instructional text and template guidance
+    sed -i.bak '/> If you cannot host a live demo/d' "$OUTPUT_FILE"
+    sed -i.bak '/Keep it demo-first, skimmable/d' "$OUTPUT_FILE"
+    sed -i.bak '/Remove any section marked optional/d' "$OUTPUT_FILE"
+    
+    # Remove optional section markers from headers and table of contents
+    sed -i.bak 's/ (optional)//g' "$OUTPUT_FILE"
+    sed -i.bak 's/#configuration-optional/#configuration/g' "$OUTPUT_FILE"
+    sed -i.bak 's/#architecture-optional/#architecture/g' "$OUTPUT_FILE"
+    
+    # Fix the context section - replace the entire section properly
+    sed -i.bak '/## Context for humans and AI/,/^---$/c\
+## Context for humans and AI\
+```yaml\
+project: '"$PROJECT_NAME"'\
+domain: '"$DOMAIN"'\
+audience: '"$AUDIENCE"'\
+interfaces: '"$INTERFACES"'\
+runtime: '"$RUNTIME"'\
+storage: '"$STORAGE"'\
+deployment: '"$DEPLOYMENT"'\
+status: '"$STATUS"'\
+license: '"$LICENSE"'\
+support: '"$SUPPORT"'\
+```\
+\
+---' "$OUTPUT_FILE"
+    
+    # Remove sections that are commonly not needed or empty
+    sed -i.bak '/## Deploy$/,/^## /{ /## Deploy$/d; /^## /!d; }' "$OUTPUT_FILE"
+    sed -i.bak '/## Maintainers$/,/^```$/d' "$OUTPUT_FILE"
+    
+    # Remove placeholder table rows that weren't filled
+    sed -i.bak '/{{OPTION_[0-9]}}/d' "$OUTPUT_FILE"
+    sed -i.bak '/{{DEFAULT_[0-9]}}/d' "$OUTPUT_FILE"
+    sed -i.bak '/{{FEATURE_ROW_[0-9]}}/d' "$OUTPUT_FILE"
+    
+    # Remove empty comparison table if not filled
+    sed -i.bak '/| Feature.*{{PROJECT_NAME}}/,+3d' "$OUTPUT_FILE"
+    
+    # Remove empty or placeholder architecture diagram
+    sed -i.bak '/!\[{{ARCH_DIAGRAM_ALT}}\]/d' "$OUTPUT_FILE"
+    
+    # Remove empty table headers that might be left
+    sed -i.bak '/^| Option.*| Default.*| Description/d' "$OUTPUT_FILE"
+    sed -i.bak '/^| -.*| -.*| -/d' "$OUTPUT_FILE"
+    
+    # Clean up multiple consecutive empty lines (reduce to single empty line)
+    awk 'BEGIN{blank=0} /^$/{blank++; if(blank<=1) print} !/^$/{blank=0; print}' "$OUTPUT_FILE" > "$OUTPUT_FILE.tmp" && mv "$OUTPUT_FILE.tmp" "$OUTPUT_FILE"
+    
+    # Remove trailing whitespace
+    sed -i.bak 's/[[:space:]]*$//' "$OUTPUT_FILE"
+    
+    # Clean up backup file from this function
+    rm -f "$OUTPUT_FILE.bak"
+}
+
+# Download template if using remote mode
+download_template() {
+    print_info "Downloading template from GitHub..."
+    if command -v curl >/dev/null 2>&1; then
+        curl -sSL "$TEMPLATE_URL" -o "$TEMPLATE_FILE"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q "$TEMPLATE_URL" -O "$TEMPLATE_FILE"
+    else
+        print_error "Neither curl nor wget found. Cannot download template."
+        exit 1
+    fi
+    print_success "Downloaded $TEMPLATE_FILE"
+}
+
+# Main generation function
+generate_readme() {
+    local use_remote=false
+    local force=false
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_usage
+                exit 0
+                ;;
+            -v|--version)
+                echo "generate v$VERSION"
+                exit 0
+                ;;
+            --remote)
+                use_remote=true
+                shift
+                ;;
+            --force)
+                force=true
+                shift
+                ;;
+            *)
+                print_error "Unknown option: $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+
+    print_info "Starting README generation..."
+
+    # Check for template file
+    if [[ "$use_remote" == true ]] || [[ ! -f "$TEMPLATE_FILE" ]]; then
+        download_template
+    fi
+
+    if [[ ! -f "$TEMPLATE_FILE" ]]; then
+        print_error "$TEMPLATE_FILE not found"
+        print_info "Run with --remote to download template, or ensure template exists locally"
+        exit 1
+    fi
+
+    # Check for context file
+    if [[ ! -f "$CONTEXT_FILE" ]]; then
+        print_warning "$CONTEXT_FILE not found"
+        echo
+        create_context_file
+        echo
+    fi
+
+    # Check if README.md exists and ask before overwriting
+    if [[ -f "$OUTPUT_FILE" && "$force" != true ]]; then
+        echo -n "README.md already exists. Overwrite? (y/N): "
+        read -r response
+        if [[ ! "$response" =~ ^[Yy]$ ]]; then
+            print_info "Aborted. Use --force to overwrite without asking."
+            exit 0
+        fi
+    fi
+
+    # Extract values from context.yaml
+    PROJECT_NAME=$(get_yaml_value "project" "$CONTEXT_FILE")
+    DOMAIN=$(get_yaml_value "domain" "$CONTEXT_FILE")
+    AUDIENCE=$(get_yaml_value "audience" "$CONTEXT_FILE")
+    INTERFACES=$(get_yaml_value "interfaces" "$CONTEXT_FILE")
+    RUNTIME=$(get_yaml_value "runtime" "$CONTEXT_FILE")
+    STORAGE=$(get_yaml_value "storage" "$CONTEXT_FILE")
+    DEPLOYMENT=$(get_yaml_value "deployment" "$CONTEXT_FILE")
+    STATUS=$(get_yaml_value "status" "$CONTEXT_FILE")
+    LICENSE=$(get_yaml_value "license" "$CONTEXT_FILE")
+    SUPPORT=$(get_yaml_value "support" "$CONTEXT_FILE")
+
+    print_info "Generating README.md for: $PROJECT_NAME"
+
+    # Start with the template
+    cp "$TEMPLATE_FILE" "$OUTPUT_FILE"
+
+    # Escape special characters for sed
+    PROJECT_NAME_ESC=$(echo "$PROJECT_NAME" | sed 's/[[\.*^$()+?{|]/\\&/g')
+    DOMAIN_ESC=$(echo "$DOMAIN" | sed 's/[[\.*^$()+?{|]/\\&/g')
+    AUDIENCE_ESC=$(echo "$AUDIENCE" | sed 's/[[\.*^$()+?{|]/\\&/g')
+
+    # Replace placeholders with actual values
+    sed -i.bak "s/{{PROJECT_NAME}}/$PROJECT_NAME_ESC/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DOMAIN}}/$DOMAIN_ESC/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{PRIMARY_AUDIENCE}}/$AUDIENCE_ESC/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{AUDIENCE}}/$AUDIENCE_ESC/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{INTERFACES}}/$INTERFACES/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{RUNTIME_REQS}}/$RUNTIME/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{STORAGE_BACKENDS}}/$STORAGE/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DEPLOY_TARGETS}}/$DEPLOYMENT/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{STATUS}}/$STATUS/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{LICENSE_SHORT}}/$LICENSE/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{PRIMARY_SUPPORT_CHANNEL}}/$SUPPORT/g" "$OUTPUT_FILE"
+
+    # Generic replacements for common placeholders
+    sed -i.bak "s/{{PROJECT_TAGLINE}}/[Add your one-line project description]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DEMO_URL}}/[Add demo URL or remove this section]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DEMO_GIF_ALT}}/Demo screenshot/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DEMO_GIF_FILENAME}}/demo.gif/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DEMO_CAPTION}}/[Add demo caption]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{CATEGORY}}/[project category]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{PRIMARY_OUTCOME}}/[main benefit or outcome]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{ALT_1}}/[alternative 1]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{ALT_2}}/[alternative 2]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{KEY_DIFFERENTIATOR}}/[key advantage]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{INSTALL_CMD}}/[installation command]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{DEMO_CMD}}/[demo command]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{USAGE_EXAMPLE_CMD}}/[usage example]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{EXPECTED_OUTPUT_SNIPPET}}/[expected output]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_1}}/[Feature 1]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_1_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_2}}/[Feature 2]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_2_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_3}}/[Feature 3]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_3_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_4}}/[Feature 4]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_4_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_5}}/[Feature 5]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{FEATURE_5_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{SUPPORTED_OS}}/[supported operating systems]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{RUNTIME_VERSIONS}}/[runtime versions]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{CPU_GPU_REQUIREMENTS}}/[hardware requirements]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{EXTERNAL_DEPENDENCIES}}/[external dependencies]/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{LICENSE_LONG}}/$LICENSE License/g" "$OUTPUT_FILE"
+    sed -i.bak "s/{{SECURITY_CONTACT}}/[security contact email]/g" "$OUTPUT_FILE"
+
+    # Clean up template-specific content
+    clean_template_content
+
+    # Clean up backup file
+    rm -f "$OUTPUT_FILE.bak"
+
+    print_success "README.md generated successfully!"
+    echo
+    print_info "Next steps:"
+    echo "  📝 Review and customize the generated README.md"
+    echo "  🔍 Search for remaining [placeholders] and replace them"
+    echo "  📁 Create docs/ structure if needed:"
+    echo "     mkdir -p docs && touch docs/{QUICKSTART,USAGE,INSTALL,CONFIGURATION,ARCHITECTURE,ROADMAP,CONTRIBUTING,CODE_OF_CONDUCT,SECURITY}.md"
+    echo "  📄 Add LICENSE file if needed"
+    
+    # Show remaining placeholders
+    remaining=$(grep -o '\[.*\]' "$OUTPUT_FILE" 2>/dev/null | sort -u || true)
+    if [[ -n "$remaining" ]]; then
+        echo
+        print_warning "Remaining placeholders to customize:"
+        echo "$remaining" | sed 's/^/    /'
+    fi
+}
+
+# Remote installation function
+install_remote() {
+    print_info "Installing generate script..."
+    
+    # Download script to current directory
+    if command -v curl >/dev/null 2>&1; then
+        curl -sSL "https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate" -o generate
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q "https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate" -O generate
+    else
+        print_error "Neither curl nor wget found. Cannot download script."
+        exit 1
+    fi
+    
+    chmod +x generate
+    print_success "Script installed as ./generate"
+    print_info "Run ./generate to create your README"
+}
+
+# Main execution
+main() {
+    # If script is being piped from curl, install it first
+    if [[ -t 0 ]]; then
+        # Running normally
+        generate_readme "$@"
+    else
+        # Being piped from curl
+        install_remote
+    fi
+}
+
+# Run main function with all arguments
+main "$@"

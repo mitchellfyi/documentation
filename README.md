@@ -4,32 +4,24 @@ A demo-first, language-agnostic guide that helps teams ship **clear, persuasive,
 
 ## Demo
 
-Generate a production-grade README in 60 seconds using our template:
+Generate a production-grade README in 60 seconds with our CLI tool:
 
 ```bash
-# 1) Start from the template
-cp README-TEMPLATE.md README.md
+# Remote usage (works in any project)
+curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
 
-# 2) Create the docs scaffold
-mkdir -p docs && touch docs/{QUICKSTART,USAGE,INSTALL,CONFIGURATION,ARCHITECTURE,ROADMAP,CONTRIBUTING,CODE_OF_CONDUCT,SECURITY}.md
-
-# 3) Add a machine-readable context file (helps AI agents)
-cat > docs/context.yaml <<'YAML'
-project: <PROJECT_NAME>
-domain: <DOMAIN>                # e.g. data platform, web app, CLI
-audience: <PRIMARY_AUDIENCE>    # e.g. SREs, app devs, analysts
-interfaces: <INTERFACES>        # e.g. CLI, REST, SDK
-runtime: <RUNTIMES>             # e.g. Python 3.11+, Node 20+
-storage: <BACKENDS>             # e.g. Postgres, S3
-deployment: <TARGETS>           # e.g. Docker, K8s
-status: <STATUS>                # experimental | beta | stable | maintenance | archived
-license: <LICENSE>              # e.g. MIT
-support: <SUPPORT_CHANNEL>      # e.g. GitHub Issues
-YAML
-
-# 4) Replace placeholders in README.md as you go
-grep -R "{{" -n README.md | cut -d: -f1 | sort -u
+# Or install locally and run
+./generate
 ```
+
+The tool will:
+1. **Guide you through setup** - Interactive questions to create `docs/context.yaml`
+2. **Generate README.md** - Populated from template with your project details  
+3. **Create docs scaffold** - Standard documentation structure
+4. **Show next steps** - Remaining customizations needed
+
+![CLI Demo](docs/assets/demo.gif)  
+<sub>Interactive README generation with guided questions</sub>
 
 ---
 
@@ -52,25 +44,71 @@ grep -R "{{" -n README.md | cut -d: -f1 | sort -u
 
 ## Quickstart
 
-1. **Copy the template**
-   Use `README-TEMPLATE.md` and keep the **Demo** section directly under the title.
+**Option 1: Use the CLI tool (recommended)**
 
-2. **Create deep docs** in `docs/`
-   Split depth from the README. Use short files with stable names:
-   `QUICKSTART.md`, `USAGE.md`, `INSTALL.md`, `CONFIGURATION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`.
+```bash
+# In any project directory
+curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
+```
 
-3. **Pick a licence** and add `LICENSE`
-   If you don’t add a licence, others cannot legally use or modify your code. Use **choosealicense.com** to decide. ([GitHub Docs][6], [Choose a License][7])
+**Option 2: Manual setup**
 
-4. **Add a security policy** in `docs/SECURITY.md`
+1. **Download and run the generator**
+   ```bash
+   curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate -o generate
+   chmod +x generate
+   ./generate
+   ```
+
+2. **Follow the interactive prompts**
+   The tool will ask about your project and create `docs/context.yaml` automatically.
+
+3. **Customize the generated README**
+   Review the output and replace any remaining `[placeholders]` with your specific details.
+
+**Additional setup:**
+
+4. **Pick a licence** and add `LICENSE`
+   If you don't add a licence, others cannot legally use or modify your code. Use **choosealicense.com** to decide. ([GitHub Docs][6], [Choose a License][7])
+
+5. **Add a security policy** in `docs/SECURITY.md`
    Tell users how to report vulnerabilities; GitHub can surface this automatically in the Security tab. ([GitHub Docs][8])
 
-5. **Adopt versioning and change logs**
+6. **Adopt versioning and change logs**
    Follow **SemVer** for versions and **Keep a Changelog** for human-readable release notes. ([Semantic Versioning][9], [keepachangelog.com][10])
 
 ---
 
 ## Usage
+
+### CLI Tool
+
+The `generate` script works in any project directory:
+
+```bash
+# Remote one-liner (installs and runs)
+curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
+
+# Or download first, then run
+./generate [OPTIONS]
+```
+
+**Options:**
+- `--remote` - Download fresh template from GitHub
+- `--force` - Overwrite existing files without asking  
+- `--help` - Show usage information
+
+**Interactive Setup:**
+If no `docs/context.yaml` exists, the tool will ask guided questions:
+- Project name and description
+- Domain and audience  
+- Technical requirements
+- License and support channels
+
+**Output:**
+- `README.md` - Generated from template with your details
+- `docs/context.yaml` - Machine-readable project metadata
+- `docs/` - Documentation scaffold structure
 
 ### README anatomy (demo-first)
 
