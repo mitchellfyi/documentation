@@ -24,15 +24,44 @@ support: GitHub Issues
 
 ## Project map
 
+### Core files
+
 - `/README.md` - authoritative, demo-first guide to writing documentation
+- `/generate` - main CLI tool for creating documentation scaffolds (18KB shell script)
+- `/AGENTS.md` - this file; machine-readable project instructions
+
+### Templates and guides
+
 - `/README-TEMPLATE.md` - copy-paste template for new projects
-- `/docs/` - deep docs (QUICKSTART, USAGE, INSTALL, CONFIGURATION, ARCHITECTURE, ROADMAP, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, context.yaml)
-- `/scripts/` - optional helper scripts for linting and link checks (create if missing)
+- `/README-GUIDE.md` - detailed guide for writing READMEs
+- `/AGENTS-TEMPLATE.md` - template for creating AGENTS.md files
+- `/AGENTS-GUIDE.md` - guide for implementing AGENTS.md convention
+
+### Documentation structure
+
+- `/docs/` - deep docs following Diátaxis framework:
+  - `QUICKSTART.md`, `USAGE.md`, `INSTALL.md`, `CONFIGURATION.md`
+  - `ARCHITECTURE.md`, `ROADMAP.md`, `CONTRIBUTING.md`
+  - `context.yaml` - machine-readable project context
+
+### Automation and quality
+
+- `/scripts/` - quality checking and automation tools:
+  - `check-quality.sh` - complete validation pipeline
+  - `setup.sh` - install required tooling
+  - Individual tools: `format.sh`, `lint-markdown.sh`, `spell-check.sh`, etc.
+
+### Configuration
+
+- `.markdownlint.jsonc`, `.prettierrc`, `cspell.json`, `.vale.ini` - tool configs
+- `.github/copilot-instructions.md` - GitHub Copilot guidance
 
 **Do not modify (without human approval):**
 
 - `LICENSE` - legal terms
+- `/generate` script core functionality (complex sed replacements)
 - External links in historical “References” sections unless you validate replacements
+- Configuration files unless fixing specific linting/formatting issues
 
 ---
 
