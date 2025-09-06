@@ -84,6 +84,26 @@ Escalate by opening an issue with label `needs-human` and include the failing co
 
 ---
 
+## Do/Don't quick reference
+
+### Do
+
+- Keep changes small and tested
+- Write Conventional Commits (docs:, feat:, fix:)
+- Use timeouts for all CLI commands
+- Run quality gates before proposing changes
+- Preserve existing functionality and anchor compatibility
+
+### Don't
+
+- Touch generated assets or core functionality without approval
+- Add new dependencies without noting in PR body
+- Commit secrets or make destructive changes without human approval
+- Skip quality validation steps
+- Break existing anchors or permalinks
+
+---
+
 ## Setup
 
 > Use **explicit commands** - do not assume prior state.
