@@ -2,7 +2,7 @@
 
 _A predictable, machine-friendly playbook for AI coding agents working in this repository._
 
-This file follows the emerging **AGENTS.md** convention - think of it as a README for agents. It gives you the exact steps, rules, and guardrails needed to work reliably on this project. Multiple assistants recognise and load `AGENTS.md` automatically, and the format supports monorepos via “nearest file wins.” :contentReference[oaicite:0]{index=0}
+This file follows the emerging **AGENTS.md** convention - a README for agents. It provides exact steps, rules, and guardrails for reliable project work. Multiple assistants load `AGENTS.md` automatically, supporting monorepos via "nearest file wins."
 
 ---
 
@@ -38,14 +38,14 @@ support: GitHub Issues
 
 ## Allowed scope and limits
 
-**Allowed**
+### Allowed
 
 - Improve wording, structure, clarity, and consistency across Markdown files
 - Add examples, tables, and checklists that improve developer and agent onboarding
 - Fix broken links, anchors, and images
 - Add or update lint/format configs for docs only
 
-**Forbidden without approval**
+### Forbidden without approval
 
 - Any change that contradicts security guidance (e.g. advising to store secrets in VCS)
 - Large re-organisation that breaks public anchors or permalinks
@@ -104,7 +104,47 @@ timeout 30s npx markdown-link-check -q README.md || true
 git ls-files '*.md' | head -20 | xargs -I{} timeout 10s npx markdown-link-check -q {} || true
 ```
 
-**Success criterion:** Prettier formatting applied, markdownlint has **no errors**, cspell has **no errors**, Vale has **no errors** when enabled, and link checks report **0 broken links** or you replace/annotate them.
+**Success criteria:** Prettier formatting applied, markdownlint has **no errors**, cspell has **no errors**,<br> Vale has **no errors** when enabled, and link checks report **0 broken links** or you replace/annotate them.
+
+---
+
+## Success criteria checklist
+
+Copy this checklist for any task working on documentation:
+
+### Pre-task setup
+
+- [ ] Read this `AGENTS.md` file completely
+- [ ] Identify files that will be modified
+- [ ] Create working branch: `git switch -c docs/<slug>`
+- [ ] Baseline check: Run quality gates in sequence:
+
+  ```bash
+  timeout 30s npx prettier . --check && \
+  timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules" && \
+  timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
+  ```
+
+### During task execution
+
+- [ ] Make minimal, incremental changes
+- [ ] Use executable commands with proper timeouts
+- [ ] Test changes frequently with quality tools
+- [ ] Preserve existing functionality
+- [ ] Add stable external references to "References" section if needed
+
+### Post-task validation
+
+- [ ] Format check: `timeout 30s npx prettier . --write --log-level warn`
+- [ ] Markdown lint: `timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules"` (no errors)
+- [ ] Spell check: `timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB` (no errors)
+- [ ] Prose check: `timeout 30s vale .` (no errors, if Vale available)
+- [ ] Link validation: `git ls-files '*.md' | head -20 | xargs -I{} timeout 10s npx markdown-link-check -q {}`<br> (no broken links)
+- [ ] Verify anchor/link compatibility maintained
+- [ ] Prepare conventional commit message (e.g., `docs: add quickstart checklists`)
+- [ ] Open PR with summary, rationale, and quality check evidence
+
+**All items must be completed before submitting changes.**
 
 ---
 
@@ -126,10 +166,15 @@ If `.markdownlint.jsonc`, `.vale.ini`, or `cspell.json` are missing, create mini
 
 ## Git and PR workflow
 
-- **Branch**: `docs/<slug>`
+- **Branch naming**:
+  - `docs/<slug>` - for documentation changes
+  - `feature/<slug>` - for new features or tools
+  - `bugfix/<slug>` - for bug fixes
 - **Commit messages**: Conventional Commits for clarity, e.g.
   - `docs: add quickstart checklists`
   - `docs: fix broken diataxis link`
+  - `feat: add new documentation generator`
+  - `fix: resolve link checker timeout issue`
 
 - **PR checklist**:
   - Summary and rationale
@@ -261,7 +306,7 @@ npm install
 
 ## Monorepo or nested docs (future)
 
-If this repo gains subpackages or a `/site/` build, place **local** `AGENTS.md` files in those directories to override or extend these rules. Agents should use the nearest `AGENTS.md`. ([Medium][1])
+If this repo gains subpackages or a `/site/` build, place **local** `AGENTS.md` files in those directories to<br> override or extend these rules. Agents should use the nearest `AGENTS.md`. ([Medium][1])
 
 ---
 
@@ -292,10 +337,7 @@ timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
 - **Adoption and purpose of AGENTS.md in the ecosystem.** ([InfoQ][4])
 - **Nearest-file behaviour for monorepos.** ([Medium][1])
 
-```
-
 [1]: https://medium.com/%40danushidk507/agents-md-a-comprehensive-guide-to-agentic-ai-collaboration-571df0e78ccc?utm_source=chatgpt.com "Agents.md: A Comprehensive Guide to Agentic AI ..."
 [2]: https://agents.md/?utm_source=chatgpt.com "AGENTS.md"
 [3]: https://github.com/openai/agents.md?utm_source=chatgpt.com "AGENTS.md — a simple, open format for guiding coding ..."
 [4]: https://www.infoq.com/news/2025/08/agents-md/?utm_source=chatgpt.com "AGENTS.md Emerges as Open Standard for AI Coding ..."
-```
