@@ -35,19 +35,20 @@ Works for open source, internal tools, research code, libraries, CLIs, services,
 
 ## Core principles
 
-1. **Clarity first** - plain English, minimal assumptions, short sentences.
-2. **Skimmable** - headings, bullets, and examples over prose.
-3. **Fast start** - a working Quickstart within 60 seconds.
-4. **Split depth** - README for overview, `docs/` for detail.
-5. **Slight sell** - why this over alternatives, shown not hyped.
-6. **AI-ready** - structured sections, explicit labels, stable links.
-7. **Truthful and current** - keep it accurate or mark status clearly.
+1. **Demo first** - lead with a live link and a 15 to 60 second GIF. Prove value in seconds.
+2. **Clarity** - plain English, minimal assumptions, short sentences.
+3. **Skimmable** - headings, bullets, and examples over prose.
+4. **Fast start** - a working Quickstart within 60 seconds.
+5. **Split depth** - README for overview, `docs/` for detail.
+6. **Slight sell** - why this over alternatives, shown not hyped.
+7. **AI-ready** - structured sections, explicit labels, stable links.
+8. **Truthful and current** - keep it accurate or mark status clearly.
 
 ---
 
 ## Canonical README structure
 
-Use the sections below in this order. Omit what you do not need, but keep the top five.
+Use the sections below in this order. Omit what you do not need, but keep the top six.
 
 ### 1) Title and one-line tagline
 
@@ -58,24 +59,33 @@ Use the sections below in this order. Omit what you do not need, but keep the to
 ```
 # Chronos
 Time-series toolkit for anomaly detection and forecasting.
-- Production-grade pipelines
+- Production pipelines
 - Pluggable models
 - Works with Postgres and S3
 ```
 
-### 2) TL;DR
+### 2) Demo — live and visual
+
+* **Live link** to a running instance, playground, notebook, or package example.
+* **One short GIF** or screenshot showing the core flow. Keep it under 5 MB, 15 to 60 seconds.
+* Optional quick captions for what the viewer is seeing.
+
+```markdown
+**Live demo**: https://demo.example.com  
+![Detect anomalies from a CSV in 15 seconds](docs/assets/demo.gif)
+```
+
+If you cannot host a live demo, provide a reproducible local demo script that runs offline with bundled sample data.
+
+### 3) TL;DR
 
 * Who it is for, the problem, the outcome. One short paragraph.
 
-### 3) Differentiation
-
-* 3 to 5 bullets on what makes it different or better.
-* Optional brief comparison table linking to alternatives docs.
+> For data engineers who need fast anomaly detection, Chronos is a time-series toolkit that turns raw CSVs into actionable signals in under a minute.
 
 ### 4) Quickstart
 
-* Fastest path to a running example. Prefer one command.
-* Include minimal prerequisites and the smallest working sample.
+* Fastest path to a running example. Prefer one command per step.
 
 ```bash
 # Install
@@ -85,7 +95,7 @@ pip install chronos-ts
 chronos demo ./data/retail.csv
 ```
 
-If multiple install methods exist, show the simplest here and link others:
+If there are multiple install methods, show the simplest here and link others:
 
 * Docker
 * From source
@@ -94,58 +104,59 @@ If multiple install methods exist, show the simplest here and link others:
 ### 5) Basic usage example
 
 * One minimal example with expected output.
-* Link to more examples or tutorials.
 
 ```bash
 chronos detect --input data.csv --column revenue
 # -> prints timestamped anomalies and scores
 ```
 
-### 6) Features
+More examples: link to `docs/USAGE.md` or tutorials.
 
-* Bullet list of core capabilities, not implementation details.
-* If useful, group by user goal.
+### 6) Differentiation
 
-### 7) Requirements and compatibility
+* 3 to 5 bullets on what makes it different or better.
+* Optional short comparison table linking to alternatives doc.
 
-* Supported OS, runtime versions, CPU/GPU needs.
+### 7) Features
+
+* Capabilities and outcomes, not internals. Group by user goal if useful.
+
+### 8) Requirements and compatibility
+
+* Supported OS, runtime versions, CPU or GPU needs.
 * Breaking version notes if relevant.
 
-### 8) Configuration
+### 9) Configuration
 
-* Table or bullets of key options and defaults.
-* Link to full config reference.
+* Table of key options and defaults. Link to full reference.
 
-### 9) Architecture snapshot (optional)
+### 10) Architecture snapshot (optional)
 
-* One diagram or paragraph describing components and flow.
-* Link to `docs/architecture.md` for detail.
+* One diagram or paragraph. Link to `docs/ARCHITECTURE.md` for depth.
 
-### 10) Roadmap or project status
+### 11) Roadmap and status
 
 * Current status: experimental, beta, stable, maintenance, archived.
 * Short roadmap bullets or link to milestones.
 
-### 11) Support
+### 12) Support
 
-* Primary support channel: issues, discussions, email, chat.
+* Primary channel: issues, discussions, email, chat.
 * Response expectations if you want to set them.
 
-### 12) Contributing
+### 13) Contributing
 
-* Invite contributions.
-* Link to `docs/CONTRIBUTING.md` and `docs/CODE_OF_CONDUCT.md`.
+* Invite contributions. Link to `docs/CONTRIBUTING.md` and `docs/CODE_OF_CONDUCT.md`.
 
-### 13) Security
+### 14) Security
 
-* How to report vulnerabilities.
-* Link to `docs/SECURITY.md`.
+* How to report vulnerabilities. Link to `docs/SECURITY.md`.
 
-### 14) License
+### 15) License
 
-* Short line with license name and link to `LICENSE`.
+* License name and link to `LICENSE`.
 
-### 15) Acknowledgements and credits
+### 16) Acknowledgements and credits
 
 * People, projects, or sponsors to credit.
 
@@ -162,51 +173,45 @@ Recommended layout:
 ├─ README.md
 ├─ LICENSE
 ├─ docs/
-│  ├─ CONTRIBUTING.md
-│  ├─ SECURITY.md
-│  ├─ CODE_OF_CONDUCT.md
 │  ├─ QUICKSTART.md
-│  ├─ INSTALL.md
 │  ├─ USAGE.md
+│  ├─ INSTALL.md
 │  ├─ CONFIGURATION.md
 │  ├─ ARCHITECTURE.md
-│  └─ ROADMAP.md
+│  ├─ ROADMAP.md
+│  ├─ CONTRIBUTING.md
+│  ├─ CODE_OF_CONDUCT.md
+│  └─ SECURITY.md
 └─ .github/
    ├─ ISSUE_TEMPLATE.md
    └─ PULL_REQUEST_TEMPLATE.md
 ```
 
-Link with stable relative URLs so they work on and off GitHub:
-
-* See [docs/QUICKSTART.md](docs/QUICKSTART.md)
-* Security policy: [docs/SECURITY.md](docs/SECURITY.md)
+Use stable relative links so they work on and off GitHub.
 
 ---
 
 ## AI-readability checklist
 
-Help agents extract context without guessing.
-
-* Clear section headings that match common labels: Title, TL;DR, Quickstart, Usage, Features, Requirements, License, Security, Contributing.
-* Stable relative links to deeper docs, not just wiki URLs.
-* A short, explicit **context block** near the top:
+* Clear section headings that match common labels: Demo, TL;DR, Quickstart, Usage, Features, Requirements, License, Security, Contributing.
+* Short **context block** near the top:
 
 ```yaml
-# context.yaml (inline in README or separate file)
 project: Chronos
 domain: time-series analysis
 audience: data engineers, ML engineers
-runtime: Python 3.10+
 interfaces: CLI, Python API
+runtime: Python 3.10+
 storage: local FS, S3
 status: beta
 license: MIT
 support: GitHub Issues
 ```
 
-* Tables for options and outputs with clear headers.
 * One minimal working command that does not require secrets.
-* Versioned claims: “Requires Python 3.10+” not “latest Python”.
+* Explicit versions, not “latest”.
+* Tables for options and outputs with clear headers.
+* Stable links to deeper docs and demo.
 * Explicit status: active, maintenance, or archived.
 
 ---
@@ -379,40 +384,25 @@ Place under the title. Only what helps decision-making.
 
 ## Pre-release checklist
 
-* [ ] Title and one-line tagline are crisp.
+* [ ] Demo section is directly under the title and works.
+* [ ] GIF is 15 to 60 seconds, under 5 MB, clearly shows core flow.
 * [ ] Quickstart is a copy-paste that works.
 * [ ] One minimal usage example with expected output.
+* [ ] Differentiation is clear and honest.
 * [ ] Features state outcomes, not internals.
 * [ ] Requirements list exact versions.
-* [ ] Differentiation is clear and honest.
 * [ ] Support and contribution links work.
 * [ ] License is declared and file exists.
-* [ ] Security contact and policy are present if relevant.
-* [ ] Links to `docs/` resolve.
-* [ ] Screenshot or GIF renders on GitHub.
+* [ ] Security policy and contact are present if relevant.
+* [ ] All `docs/` links resolve.
 
 ---
 
 ## Maintenance checklist
 
-* [ ] Update README on breaking changes and new features.
+* [ ] Update demo and GIF when UX changes.
 * [ ] Review Quickstart quarterly.
-* [ ] Validate all links automatically in CI.
+* [ ] Validate links automatically in CI.
 * [ ] Keep status current: active, maintenance, archived.
 * [ ] Rotate badges if they no longer add value.
-* [ ] Regenerate or compress GIFs if they bloat the repo.
-
----
-
-## References and examples
-
-* Make a README: [https://www.makeareadme.com/](https://www.makeareadme.com/)
-* Awesome README (examples, patterns): [https://github.com/matiassingers/awesome-readme](https://github.com/matiassingers/awesome-readme)
-* How to write a good README (guide with rationale): [https://github.com/banesullivan/README](https://github.com/banesullivan/README)
-
-For inspiration, browse a few top-starred projects in your language and copy only the good ideas: structured headings, fast Quickstart, one visual, clear contribution path.
-
----
-
-**License for this guide**
-Feel free to adapt this guide in your own repos. If you keep attribution, link back here or to the sources above.
+* [ ] Compress images and GIFs to keep repo lean.
