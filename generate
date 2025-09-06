@@ -146,16 +146,16 @@ clean_template_content() {
     sed -i.bak '/## Context for humans and AI/,/^---$/c\
 ## Context for humans and AI\
 ```yaml\
-project: '"$PROJECT_NAME"'\
-domain: '"$DOMAIN"'\
-audience: '"$AUDIENCE"'\
-interfaces: '"$INTERFACES"'\
-runtime: '"$RUNTIME"'\
-storage: '"$STORAGE"'\
-deployment: '"$DEPLOYMENT"'\
-status: '"$STATUS"'\
-license: '"$LICENSE"'\
-support: '"$SUPPORT"'\
+project: '"$PROJECT_NAME_SHELL"'\
+domain: '"$DOMAIN_SHELL"'\
+audience: '"$AUDIENCE_SHELL"'\
+interfaces: '"$INTERFACES_SHELL"'\
+runtime: '"$RUNTIME_SHELL"'\
+storage: '"$STORAGE_SHELL"'\
+deployment: '"$DEPLOYMENT_SHELL"'\
+status: '"$STATUS_SHELL"'\
+license: '"$LICENSE_SHELL"'\
+support: '"$SUPPORT_SHELL"'\
 ```\
 \
 ---' "$OUTPUT_FILE"
@@ -366,55 +366,89 @@ generate_readme() {
     # Start with the template
     cp "$TEMPLATE_FILE" "$OUTPUT_FILE"
 
-    # Escape special characters for sed
-    PROJECT_NAME_ESC=$(echo "$PROJECT_NAME" | sed 's/[[\.*^$()+?{|]/\\&/g')
-    DOMAIN_ESC=$(echo "$DOMAIN" | sed 's/[[\.*^$()+?{|]/\\&/g')
-    AUDIENCE_ESC=$(echo "$AUDIENCE" | sed 's/[[\.*^$()+?{|]/\\&/g')
+    # Escape special characters for sed (comprehensive escaping for all metacharacters)
+    escape_for_sed() {
+        local input="$1"
+        # Escape backslashes first, then other metacharacters
+        # Using | as delimiter, so we need to escape |, \, &, and other problematic chars
+        echo "$input" | sed 's/\\/\\\\/g; s/|/\\|/g; s/&/\\&/g; s/\[/\\[/g; s/\]/\\]/g; s/\./\\./g; s/\*/\\*/g; s/\^/\\^/g; s/\$/\\$/g; s/(/\\(/g; s/)/\\)/g; s/+/\\+/g; s/?/\\?/g; s/{/\\{/g'
+    }
 
-    # Replace placeholders with actual values
-    sed -i.bak "s/{{PROJECT_NAME}}/$PROJECT_NAME_ESC/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DOMAIN}}/$DOMAIN_ESC/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{PRIMARY_AUDIENCE}}/$AUDIENCE_ESC/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{AUDIENCE}}/$AUDIENCE_ESC/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{INTERFACES}}/$INTERFACES/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{RUNTIME_REQS}}/$RUNTIME/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{STORAGE_BACKENDS}}/$STORAGE/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DEPLOY_TARGETS}}/$DEPLOYMENT/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{STATUS}}/$STATUS/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{LICENSE_SHORT}}/$LICENSE/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{PRIMARY_SUPPORT_CHANNEL}}/$SUPPORT/g" "$OUTPUT_FILE"
+    # Escape special characters for shell variable interpolation
+    escape_for_shell() {
+        local input="$1"
+        # Escape backslashes and single quotes for shell variable interpolation
+        echo "$input" | sed 's/\\/\\\\/g; s/'"'"'/'"'"'\\\'"'"'/g'
+    }
 
-    # Generic replacements for common placeholders
-    sed -i.bak "s/{{PROJECT_TAGLINE}}/[Add your one-line project description]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DEMO_URL}}/[Add demo URL or remove this section]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DEMO_GIF_ALT}}/Demo screenshot/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DEMO_GIF_FILENAME}}/demo.gif/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DEMO_CAPTION}}/[Add demo caption]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{CATEGORY}}/[project category]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{PRIMARY_OUTCOME}}/[main benefit or outcome]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{ALT_1}}/[alternative 1]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{ALT_2}}/[alternative 2]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{KEY_DIFFERENTIATOR}}/[key advantage]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{INSTALL_CMD}}/[installation command]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{DEMO_CMD}}/[demo command]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{USAGE_EXAMPLE_CMD}}/[usage example]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{EXPECTED_OUTPUT_SNIPPET}}/[expected output]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_1}}/[Feature 1]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_1_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_2}}/[Feature 2]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_2_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_3}}/[Feature 3]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_3_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_4}}/[Feature 4]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_4_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_5}}/[Feature 5]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{FEATURE_5_BENEFIT}}/[benefit description]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{SUPPORTED_OS}}/[supported operating systems]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{RUNTIME_VERSIONS}}/[runtime versions]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{CPU_GPU_REQUIREMENTS}}/[hardware requirements]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{EXTERNAL_DEPENDENCIES}}/[external dependencies]/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{LICENSE_LONG}}/$LICENSE License/g" "$OUTPUT_FILE"
-    sed -i.bak "s/{{SECURITY_CONTACT}}/[security contact email]/g" "$OUTPUT_FILE"
+    # Apply escaping to all variables that will be used in sed replacements
+    PROJECT_NAME_ESC=$(escape_for_sed "$PROJECT_NAME")
+    DOMAIN_ESC=$(escape_for_sed "$DOMAIN")
+    AUDIENCE_ESC=$(escape_for_sed "$AUDIENCE")
+    INTERFACES_ESC=$(escape_for_sed "$INTERFACES")
+    RUNTIME_ESC=$(escape_for_sed "$RUNTIME")
+    STORAGE_ESC=$(escape_for_sed "$STORAGE")
+    DEPLOYMENT_ESC=$(escape_for_sed "$DEPLOYMENT")
+    STATUS_ESC=$(escape_for_sed "$STATUS")
+    LICENSE_ESC=$(escape_for_sed "$LICENSE")
+    SUPPORT_ESC=$(escape_for_sed "$SUPPORT")
+
+    # Apply shell escaping for variables used in shell interpolation (context section)
+    PROJECT_NAME_SHELL=$(escape_for_shell "$PROJECT_NAME")
+    DOMAIN_SHELL=$(escape_for_shell "$DOMAIN")
+    AUDIENCE_SHELL=$(escape_for_shell "$AUDIENCE")
+    INTERFACES_SHELL=$(escape_for_shell "$INTERFACES")
+    RUNTIME_SHELL=$(escape_for_shell "$RUNTIME")
+    STORAGE_SHELL=$(escape_for_shell "$STORAGE")
+    DEPLOYMENT_SHELL=$(escape_for_shell "$DEPLOYMENT")
+    STATUS_SHELL=$(escape_for_shell "$STATUS")
+    LICENSE_SHELL=$(escape_for_shell "$LICENSE")
+    SUPPORT_SHELL=$(escape_for_shell "$SUPPORT")
+
+    # Replace placeholders with actual values (using | delimiter to avoid conflicts with / in values)
+    sed -i.bak "s|{{PROJECT_NAME}}|$PROJECT_NAME_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DOMAIN}}|$DOMAIN_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{PRIMARY_AUDIENCE}}|$AUDIENCE_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{AUDIENCE}}|$AUDIENCE_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{INTERFACES}}|$INTERFACES_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{RUNTIME_REQS}}|$RUNTIME_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{STORAGE_BACKENDS}}|$STORAGE_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DEPLOY_TARGETS}}|$DEPLOYMENT_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{STATUS}}|$STATUS_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{LICENSE_SHORT}}|$LICENSE_ESC|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{PRIMARY_SUPPORT_CHANNEL}}|$SUPPORT_ESC|g" "$OUTPUT_FILE"
+
+    # Generic replacements for common placeholders (using | delimiter for consistency)
+    sed -i.bak "s|{{PROJECT_TAGLINE}}|[Add your one-line project description]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DEMO_URL}}|[Add demo URL or remove this section]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DEMO_GIF_ALT}}|Demo screenshot|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DEMO_GIF_FILENAME}}|demo.gif|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DEMO_CAPTION}}|[Add demo caption]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{CATEGORY}}|[project category]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{PRIMARY_OUTCOME}}|[main benefit or outcome]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{ALT_1}}|[alternative 1]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{ALT_2}}|[alternative 2]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{KEY_DIFFERENTIATOR}}|[key advantage]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{INSTALL_CMD}}|[installation command]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{DEMO_CMD}}|[demo command]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{USAGE_EXAMPLE_CMD}}|[usage example]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{EXPECTED_OUTPUT_SNIPPET}}|[expected output]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_1}}|[Feature 1]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_1_BENEFIT}}|[benefit description]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_2}}|[Feature 2]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_2_BENEFIT}}|[benefit description]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_3}}|[Feature 3]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_3_BENEFIT}}|[benefit description]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_4}}|[Feature 4]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_4_BENEFIT}}|[benefit description]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_5}}|[Feature 5]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{FEATURE_5_BENEFIT}}|[benefit description]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{SUPPORTED_OS}}|[supported operating systems]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{RUNTIME_VERSIONS}}|[runtime versions]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{CPU_GPU_REQUIREMENTS}}|[hardware requirements]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{EXTERNAL_DEPENDENCIES}}|[external dependencies]|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{LICENSE_LONG}}|$LICENSE_ESC License|g" "$OUTPUT_FILE"
+    sed -i.bak "s|{{SECURITY_CONTACT}}|[security contact email]|g" "$OUTPUT_FILE"
 
     # Clean up template-specific content
     clean_template_content
