@@ -280,6 +280,34 @@ If `.markdownlint.jsonc`, `.vale.ini`, or `cspell.json` are missing, create mini
 
 ---
 
+## Coding Style and Lint Commands
+
+**Quick Summary:** This repository uses British English (en-GB), 120-character line length, fenced code blocks, and clear documentation patterns. All changes must pass formatting, linting, and spell checking.
+
+**Required Lint Commands (copy and run exactly):**
+
+```bash
+# Complete quality check (all linters)
+timeout 300s scripts/check-quality.sh
+
+# Individual linters
+timeout 30s npx prettier . --check                                    # Formatting
+timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules"          # Markdown style
+timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB # Spelling
+```
+
+**Detailed Rules:**
+
+- **Comprehensive style guide:** [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md#coding-standards)
+- **Markdown linting rules:** [.markdownlint.jsonc](.markdownlint.jsonc)
+- **Code formatting rules:** [.prettierrc](.prettierrc)
+- **Spell check dictionary:** [cspell.json](cspell.json)
+- **Prose style config:** [.vale.ini](.vale.ini) _(optional)_
+
+**Quality Gates:** All formatting, linting, and spell checks must pass before submitting changes. Pre-existing repository errors (84 markdown issues, spelling issues) are acceptable and should not be fixed unless directly related to your changes.
+
+---
+
 ## Git and PR workflow
 
 ### Branch naming conventions
