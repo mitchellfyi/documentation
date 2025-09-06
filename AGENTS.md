@@ -157,6 +157,73 @@ git ls-files '*.md' | head -20 | xargs -I{} timeout 10s npx markdown-link-check 
 
 ---
 
+## Testing protocol + CI gates
+
+**⚠️ MANDATORY REQUIREMENT: Do not propose merge if any check fails.**
+
+All agents must run and pass these commands before proposing changes. Expected runtimes are provided for planning.
+
+### Tests (Quality Pipeline)
+
+```bash
+# Complete quality check pipeline (timeout: 300s, runtime: ~28s)
+timeout 300s scripts/check-quality.sh
+```
+
+**Expected outcome:** All formatting, linting, spell check, and link validation passes.<br> Pre-existing repository errors are expected and should not be fixed unless directly related to your changes.
+
+### Lint (Individual Tools)
+
+```bash
+# Format check (timeout: 30s, runtime: ~2s)
+timeout 30s npx prettier . --check
+
+# Markdown linting (timeout: 30s, runtime: ~8s)
+timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules"
+
+# Spell check British English (timeout: 60s, runtime: ~13s)
+timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
+
+# Prose linting - optional (timeout: 30s, runtime: ~5s)
+command -v vale >/dev/null && timeout 30s vale . || echo "Vale not installed - skipping"
+```
+
+**Expected outcome:** Only formatting should pass cleanly.<br> Linting and spell check will show pre-existing errors (88 markdown lint errors, 45 spelling issues).<br> Fix only errors you introduce.
+
+### Type-check
+
+**Not applicable** - This repository contains shell scripts and Markdown files. No type checking required.
+
+### Build (Documentation Generation)
+
+```bash
+# Test documentation generation (timeout: 120s, runtime: ~36s)
+# Note: This is interactive and requires manual input
+cd /tmp && mkdir -p test-build && cd test-build
+cp /home/runner/work/documentation/documentation/generate .
+timeout 120s ./generate --help
+
+# Verify script functionality
+timeout 120s ./generate --skip-quality --force
+```
+
+**Expected outcome:** README.md and docs/context.yaml files created successfully. Generate script completes without errors.
+
+### CI Gates Summary
+
+**All of these must pass before proposing merge:**
+
+1. ✅ `scripts/check-quality.sh` exits with code 0
+2. ✅ `npx prettier . --check` shows no formatting issues
+3. ✅ No new markdown linting errors introduced (existing 88 errors acceptable)
+4. ✅ No new spelling errors introduced (existing 45 errors acceptable)
+5. ✅ `./generate` script functions correctly
+6. ✅ All changes preserve existing functionality
+
+**If any check fails:** Fix the issue before proposing merge. Do not create workarounds or ignore failures.
+
+---
+
 ## Success criteria checklist
 
 Copy this checklist for any task working on documentation:
