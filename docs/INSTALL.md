@@ -11,6 +11,7 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 ```
 
 This works in any project directory and:
+
 - Downloads the script
 - Runs interactive setup
 - Generates README.md and docs structure
@@ -34,17 +35,19 @@ chmod +x generate
 ### From GitHub repository
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/mitchellfyi/documentation.git
    cd documentation
    ```
 
 2. **Copy files to your project:**
+
    ```bash
    # Copy template and generator
    cp README-TEMPLATE.md /path/to/your/project/
    cp generate /path/to/your/project/
-   
+
    # Make generator executable
    chmod +x /path/to/your/project/generate
    ```
@@ -159,7 +162,7 @@ docker run -it -v $(pwd):/workspace mitchellfyi/docs-generator
 name: Generate Documentation
 on:
   workflow_dispatch:
-  
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -199,11 +202,13 @@ generate-docs:
 ### Common installation issues
 
 **Permission denied:**
+
 ```bash
 chmod +x generate
 ```
 
 **curl/wget not found:**
+
 ```bash
 # On Ubuntu/Debian
 sudo apt-get install curl
@@ -216,6 +221,7 @@ apk add curl
 ```
 
 **Script not found:**
+
 ```bash
 # Verify URL is accessible
 curl -I https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate
@@ -225,6 +231,7 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 ```
 
 **Network issues:**
+
 ```bash
 # Test connectivity
 ping github.com
@@ -236,15 +243,18 @@ wget https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate
 ### Platform-specific notes
 
 **Windows (WSL):**
+
 - Use WSL2 for best compatibility
 - Ensure line endings are LF, not CRLF
 - Install curl in WSL: `sudo apt install curl`
 
 **macOS:**
+
 - Use Homebrew for additional tools: `brew install node`
 - May need to allow script execution in Security preferences
 
 **Linux:**
+
 - Most distributions include curl by default
 - Use package manager for Node.js: `sudo apt install nodejs npm`
 

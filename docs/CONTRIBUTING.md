@@ -16,6 +16,7 @@ Thank you for your interest in contributing to the documentation framework! This
 ### 🐛 Report bugs
 
 Found a bug? Please create an issue with:
+
 - Clear description of the problem
 - Steps to reproduce
 - Expected vs actual behaviour
@@ -23,29 +24,30 @@ Found a bug? Please create an issue with:
 - Error messages or logs
 
 **Use the bug report template:**
+
 ```markdown
-**Bug description**
-A clear description of what the bug is.
+**Bug description** A clear description of what the bug is.
 
 **Steps to reproduce**
+
 1. Run command '...'
 2. See error
 
-**Expected behaviour**
-What you expected to happen.
+**Expected behaviour** What you expected to happen.
 
 **System info**
+
 - OS: [e.g. macOS 14.1]
 - Shell: [e.g. bash 5.2]
 - Node.js: [e.g. 20.10.0]
 
-**Additional context**
-Any other context about the problem.
+**Additional context** Any other context about the problem.
 ```
 
 ### 💡 Suggest features
 
 Have an idea? Open a feature request with:
+
 - Clear problem statement
 - Proposed solution
 - Alternative approaches considered
@@ -54,6 +56,7 @@ Have an idea? Open a feature request with:
 ### 📝 Improve documentation
 
 Documentation improvements are always welcome:
+
 - Fix typos and grammar
 - Add examples and clarifications
 - Improve structure and organisation
@@ -62,6 +65,7 @@ Documentation improvements are always welcome:
 ### 🛠 Code contributions
 
 We welcome code contributions for:
+
 - Bug fixes
 - New features (discuss first in issues)
 - Performance improvements
@@ -79,25 +83,28 @@ We welcome code contributions for:
 ### Local setup
 
 1. **Fork and clone:**
+
    ```bash
    git clone https://github.com/yourusername/documentation.git
    cd documentation
    ```
 
 2. **Install quality tools:**
+
    ```bash
    # Check Node.js version
    node --version  # Should be 20+
-   
+
    # Install Vale (optional)
    pipx install vale
    ```
 
 3. **Verify setup:**
+
    ```bash
    # Test the generator
    ./generate --help
-   
+
    # Run quality checks
    npx prettier . --check
    npx markdownlint-cli2 "**/*.md" "#node_modules"
@@ -107,11 +114,12 @@ We welcome code contributions for:
 ### Development workflow
 
 1. **Create a feature branch:**
+
    ```bash
    git checkout -b feat/your-feature-name
    # or
    git checkout -b fix/bug-description
-   # or  
+   # or
    git checkout -b docs/improvement-description
    ```
 
@@ -121,16 +129,17 @@ We welcome code contributions for:
    - Update documentation as needed
 
 3. **Test your changes:**
+
    ```bash
    # Format code
    npx prettier . --write
-   
+
    # Lint markdown
    npx markdownlint-cli2 "**/*.md" "#node_modules"
-   
+
    # Check spelling
    npx cspell "**/*.md" --no-must-find-files --locale en-GB
-   
+
    # Test generator functionality
    mkdir test-project
    cd test-project
@@ -140,6 +149,7 @@ We welcome code contributions for:
    ```
 
 4. **Commit your changes:**
+
    ```bash
    git add .
    git commit -m "feat: add new template variant"
@@ -160,6 +170,7 @@ We welcome code contributions for:
 - **Variables:** Use descriptive names, quote properly
 
 **Example:**
+
 ```bash
 #!/bin/bash
 set -e
@@ -182,6 +193,7 @@ validate_input() {
 - **Links:** Prefer relative links within repo
 
 **Markdown style:**
+
 ```markdown
 # Main heading (only one per file)
 
@@ -209,6 +221,7 @@ Use Conventional Commits format:
 ```
 
 **Types:**
+
 - `feat` - New feature
 - `fix` - Bug fix
 - `docs` - Documentation changes
@@ -218,6 +231,7 @@ Use Conventional Commits format:
 - `chore` - Build/tool changes
 
 **Examples:**
+
 ```
 feat(generator): add support for custom templates
 fix: resolve template download timeout issue
@@ -232,12 +246,14 @@ style: format markdown files with prettier
 Test the generator with different scenarios:
 
 1. **Fresh installation:**
+
    ```bash
    # Test remote installation
    curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate | bash
    ```
 
 2. **Interactive setup:**
+
    ```bash
    # Test with no existing context
    rm -f docs/context.yaml
@@ -245,11 +261,12 @@ Test the generator with different scenarios:
    ```
 
 3. **Edge cases:**
+
    ```bash
    # Test with existing README
    echo "# Existing" > README.md
    ./generate --force
-   
+
    # Test with malformed context
    echo "invalid: yaml: content" > docs/context.yaml
    ./generate
@@ -263,7 +280,7 @@ All contributions must pass:
 # Formatting
 npx prettier . --check
 
-# Markdown linting  
+# Markdown linting
 npx markdownlint-cli2 "**/*.md" "#node_modules"
 
 # Spell checking
@@ -305,26 +322,31 @@ Your pull request should include:
 5. **Breaking change notes** (if applicable)
 
 **PR template:**
+
 ```markdown
 ## Description
+
 Brief description of changes and why they're needed.
 
 ## Type of change
+
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Manual testing completed
 - [ ] Quality checks pass (paste output below)
 - [ ] Edge cases considered
 
 ## Quality check output
 ```
-npx prettier . --check
-npx markdownlint-cli2 "**/*.md" "#node_modules"  
-npx cspell "**/*.md" --no-must-find-files --locale en-GB
+
+npx prettier . --check npx markdownlint-cli2 "**/\*.md" "#node_modules"  
+npx cspell "**/\*.md" --no-must-find-files --locale en-GB
+
 ```
 
 ## Checklist
@@ -342,6 +364,7 @@ npx cspell "**/*.md" --no-must-find-files --locale en-GB
 4. **Approval and merge** - Once approved by maintainers
 
 **Review criteria:**
+
 - Functionality works as expected
 - Code quality meets standards
 - Documentation is clear and complete
@@ -373,6 +396,7 @@ We are committed to providing a welcoming and inclusive experience for everyone.
 ### Contributors
 
 All contributors are recognised in:
+
 - GitHub contributors page
 - Release notes for significant contributions
 - Special recognition for major features
@@ -380,9 +404,11 @@ All contributors are recognised in:
 ### Maintainers
 
 Current maintainers:
+
 - **@mitchellfyi** - Project creator and lead maintainer
 
 Interested in becoming a maintainer? Regular contributors who demonstrate:
+
 - Technical expertise
 - Community engagement
 - Commitment to project values
@@ -394,6 +420,7 @@ May be invited to join the maintainer team.
 See [ROADMAP.md](ROADMAP.md) for planned features and priorities.
 
 **Current focus areas:**
+
 - Template variants for different project types
 - Quality tool integration improvements
 - CI/CD integration examples

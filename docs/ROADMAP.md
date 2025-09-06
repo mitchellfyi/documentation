@@ -5,8 +5,9 @@ Future plans and development priorities for the documentation framework.
 ## Current status: Stable
 
 The framework is production-ready with core features complete:
+
 - ✅ CLI generator with interactive setup
-- ✅ Template-based README generation  
+- ✅ Template-based README generation
 - ✅ Quality tools integration
 - ✅ Remote installation support
 - ✅ Comprehensive documentation
@@ -18,6 +19,7 @@ The framework is production-ready with core features complete:
 **Released:** December 2024
 
 Core functionality:
+
 - Interactive CLI generator
 - README template with comprehensive sections
 - Context-driven placeholder replacement
@@ -29,6 +31,7 @@ Core functionality:
 **Target:** Q1 2025
 
 Enhanced documentation quality:
+
 - Pre-configured linting rules (markdownlint, cspell, Vale)
 - Automated formatting with Prettier
 - Link checking and validation
@@ -36,6 +39,7 @@ Enhanced documentation quality:
 - Pre-commit hooks setup
 
 **Progress:**
+
 - ✅ Configuration files documented
 - ⏳ Automated setup scripts
 - ⏳ GitHub Actions templates
@@ -46,13 +50,15 @@ Enhanced documentation quality:
 **Target:** Q1 2025
 
 Project-specific templates:
+
 - CLI tool template
-- Library/SDK template  
+- Library/SDK template
 - Web application template
 - API service template
 - Mobile app template
 
 **Requirements:**
+
 - Template selection in interactive setup
 - Conditional sections based on project type
 - Domain-specific placeholders
@@ -65,11 +71,13 @@ Project-specific templates:
 **Target:** Q2 2025
 
 **Breaking changes:**
+
 - New template format with metadata
 - Enhanced context schema
 - Improved CLI interface
 
 **New features:**
+
 - Template marketplace/registry
 - Custom template support
 - Template validation and testing
@@ -80,12 +88,14 @@ Project-specific templates:
 **Target:** Q3 2025
 
 Extensibility improvements:
+
 - Plugin system for custom processing
 - Hooks for pre/post generation steps
 - Community plugin registry
 - Plugin development toolkit
 
 **Use cases:**
+
 - Custom placeholder processors
 - Integration with project management tools
 - Automated screenshot generation
@@ -96,12 +106,14 @@ Extensibility improvements:
 **Target:** Q4 2025
 
 Browser-based generation:
+
 - Web UI for interactive setup
 - Live preview of generated documentation
 - Template customisation interface
 - Export to various formats
 
 **Technical approach:**
+
 - Static site with client-side processing
 - WebAssembly for template engine
 - GitHub integration for direct commits
@@ -114,12 +126,14 @@ Browser-based generation:
 **Target:** 2026
 
 AI-powered enhancements:
+
 - Automated content suggestions
 - Documentation gap analysis
 - Style consistency checking
 - Automated screenshot/diagram generation
 
 **Capabilities:**
+
 - Natural language project description → structured docs
 - Code analysis → API documentation
 - Best practice recommendations
@@ -130,12 +144,14 @@ AI-powered enhancements:
 **Target:** 2026
 
 Organisation-scale deployment:
+
 - Centralised template management
 - Brand customisation and themes
 - Analytics and usage tracking
 - Integration with enterprise tools
 
 **Enterprise needs:**
+
 - SAML/SSO authentication
 - Audit logging and compliance
 - Custom approval workflows
@@ -146,6 +162,7 @@ Organisation-scale deployment:
 ### Documentation as code platform
 
 Transform into comprehensive documentation platform:
+
 - **Authoring** - Multiple input formats and editors
 - **Generation** - Template-driven, AI-assisted content creation
 - **Validation** - Automated quality assurance and testing
@@ -155,6 +172,7 @@ Transform into comprehensive documentation platform:
 ### Ecosystem integration
 
 Deep integration with development ecosystem:
+
 - **IDE plugins** - VS Code, JetBrains, Vim extensions
 - **CI/CD platforms** - GitHub Actions, GitLab CI, Jenkins
 - **Project management** - Jira, Linear, Asana integration
@@ -165,12 +183,14 @@ Deep integration with development ecosystem:
 ### Open source priorities
 
 **Community building:**
+
 - Contributor onboarding programme
 - Regular community calls
 - Documentation hackathons
 - Template contribution guidelines
 
 **Governance:**
+
 - Technical steering committee
 - RFC process for major changes
 - Community voting on feature priorities
@@ -179,12 +199,14 @@ Deep integration with development ecosystem:
 ### Contribution opportunities
 
 **Current needs:**
+
 - Template variants for different domains
 - Quality tool configurations
 - CI/CD integration examples
 - Multi-language documentation
 
 **How to contribute:**
+
 - Check GitHub issues with `good-first-issue` label
 - Propose new templates via RFC process
 - Submit quality improvements and bug fixes
@@ -200,6 +222,7 @@ Deep integration with development ecosystem:
 - **Contributors** - Active framework contributors
 
 **Targets for 2025:**
+
 - 10,000+ monthly downloads
 - 1,000+ repositories using framework
 - 50+ community templates
@@ -217,7 +240,7 @@ Deep integration with development ecosystem:
 Based on community feedback and usage analytics:
 
 1. **High priority** - Core stability and performance
-2. **Medium priority** - New templates and integrations  
+2. **Medium priority** - New templates and integrations
 3. **Low priority** - Advanced features and experiments
 
 ## Breaking changes policy
@@ -247,6 +270,7 @@ Based on community feedback and usage analytics:
 ### Roadmap updates
 
 This roadmap is updated quarterly based on:
+
 - Community feedback and feature requests
 - Usage analytics and adoption patterns
 - Technical feasibility and resource constraints
@@ -257,4 +281,4 @@ This roadmap is updated quarterly based on:
 
 ---
 
-*This roadmap is a living document and subject to change based on community needs, technical constraints, and strategic priorities. Dates are estimates and may shift based on development progress and feedback.*
+_This roadmap is a living document and subject to change based on community needs, technical constraints, and strategic priorities. Dates are estimates and may shift based on development progress and feedback._

@@ -24,12 +24,14 @@ The documentation framework follows a simple, file-based architecture with no ru
 **Purpose:** Core CLI tool that orchestrates documentation generation
 
 **Key functions:**
+
 - Interactive project setup
 - Template downloading and processing
 - Placeholder replacement
 - Content cleaning and validation
 
 **Architecture:**
+
 ```bash
 generate
 ├── CLI argument parsing
@@ -44,11 +46,13 @@ generate
 **Purpose:** Standardised documentation structure with placeholders
 
 **Components:**
+
 - `README-TEMPLATE.md` - Main documentation template
 - Placeholder system (`{{VARIABLE}}` and `[instructions]`)
 - Section structure following Diátaxis principles
 
 **Template architecture:**
+
 ```
 README-TEMPLATE.md
 ├── Header (title, tagline)
@@ -58,7 +62,7 @@ README-TEMPLATE.md
 ├── Context metadata
 ├── Core sections
 │   ├── Quickstart
-│   ├── Usage  
+│   ├── Usage
 │   ├── Features
 │   ├── Requirements
 │   └── Configuration
@@ -78,18 +82,19 @@ README-TEMPLATE.md
 **Purpose:** Machine-readable project information
 
 **Structure:**
+
 ```yaml
 # docs/context.yaml
-project: string        # Human-readable name
-domain: string         # Project category
-audience: string       # Primary users
-interfaces: string     # User interaction methods
-runtime: string        # Technical requirements
-storage: string        # Data persistence
-deployment: string     # Deployment targets
-status: enum           # Development stage
-license: string        # Legal terms
-support: string        # Help channel
+project: string # Human-readable name
+domain: string # Project category
+audience: string # Primary users
+interfaces: string # User interaction methods
+runtime: string # Technical requirements
+storage: string # Data persistence
+deployment: string # Deployment targets
+status: enum # Development stage
+license: string # Legal terms
+support: string # Help channel
 ```
 
 ### 4. Quality tools integration
@@ -97,6 +102,7 @@ support: string        # Help channel
 **Purpose:** Automated documentation quality assurance
 
 **Tools:**
+
 - **Prettier** - Markdown formatting
 - **markdownlint** - Style consistency
 - **cspell** - Spell checking (en-GB)
@@ -104,6 +110,7 @@ support: string        # Help channel
 - **markdown-link-check** - Link validation
 
 **Integration points:**
+
 ```
 Quality Pipeline
 ├── Format check (Prettier)
@@ -198,11 +205,13 @@ graph TD
 ### Threat model
 
 **Risks:**
+
 - Remote code execution via template injection
 - Information disclosure through generated docs
 - Supply chain attacks via template source
 
 **Mitigations:**
+
 - Template sanitisation and validation
 - No dynamic code execution in templates
 - HTTPS-only template downloads
@@ -248,7 +257,7 @@ DOCS_GENERATOR_DEBUG=1 ./generate
 
 # Log levels
 ERROR   - Fatal errors that prevent generation
-WARN    - Non-fatal issues or missing optional components  
+WARN    - Non-fatal issues or missing optional components
 INFO    - Progress updates and major steps
 DEBUG   - Detailed operation logging
 ```
@@ -259,7 +268,7 @@ DEBUG   - Detailed operation logging
 # Validate generator integrity
 ./generate --version
 
-# Test template accessibility  
+# Test template accessibility
 curl -I https://raw.githubusercontent.com/mitchellfyi/documentation/main/README-TEMPLATE.md
 
 # Verify quality tools
@@ -285,18 +294,21 @@ npx markdownlint-cli2 --version
 ### Technology decisions
 
 **Why bash?**
+
 - Universal availability on Unix systems
 - No additional runtime dependencies
 - Simple text processing with sed/awk
 - Easy to audit and modify
 
 **Why file-based?**
+
 - Simple to understand and debug
 - Version control friendly
 - No infrastructure requirements
 - Portable across environments
 
 **Why template-driven?**
+
 - Consistent output structure
 - Easy to maintain and update
 - Supports customisation

@@ -36,10 +36,11 @@ USAGE:
     ./generate [OPTIONS]
 
 OPTIONS:
-    -h, --help     Show this help
-    -v, --version  Show version
-    --remote       Use remote template (downloads from GitHub)
-    --force        Overwrite existing files without asking
+    -h, --help        Show this help
+    -v, --version     Show version
+    --remote          Use remote template (downloads from GitHub)
+    --force           Overwrite existing files without asking
+    --skip-quality    Skip quality checks after generation
 
 EXAMPLES:
     # Local usage (in this repo)
@@ -50,6 +51,9 @@ EXAMPLES:
 
     # With remote template
     ./generate --remote
+    
+    # Skip quality checks (faster generation)
+    ./generate --skip-quality
 
 SETUP:
     If no docs/context.yaml exists, the script will guide you through
@@ -199,10 +203,89 @@ download_template() {
     print_success "Downloaded $TEMPLATE_FILE"
 }
 
+# Run quality checks on generated documentation
+run_quality_checks() {
+    print_info "Running quality checks on generated README.md..."
+    
+    # Check if scripts directory exists
+    if [[ ! -d "scripts" ]]; then
+        print_warning "Scripts directory not found. Skipping quality checks."
+        print_info "Run 'git clone https://github.com/mitchellfyi/documentation.git' or add scripts manually."
+        return 0
+    fi
+    
+    local quality_passed=true
+    
+    echo
+    print_info "1️⃣  Formatting check..."
+    if [[ -x "scripts/format.sh" ]]; then
+        if timeout 30s npx prettier "$OUTPUT_FILE" --check --log-level warn 2>/dev/null; then
+            print_success "Formatting is correct"
+        else
+            print_warning "Formatting issues found. Auto-fixing..."
+            if timeout 30s npx prettier "$OUTPUT_FILE" --write --log-level warn 2>/dev/null; then
+                print_success "Formatting applied"
+            else
+                print_warning "Could not auto-fix formatting"
+                quality_passed=false
+            fi
+        fi
+    else
+        print_warning "Format script not found, skipping"
+    fi
+    
+    echo
+    print_info "2️⃣  Markdown linting..."
+    if [[ -x "scripts/lint-markdown.sh" ]]; then
+        if timeout 30s npx markdownlint-cli2 "$OUTPUT_FILE" 2>/dev/null; then
+            print_success "Markdown linting passed"
+        else
+            print_warning "Markdown linting issues found"
+            quality_passed=false
+        fi
+    else
+        print_warning "Markdown lint script not found, skipping"
+    fi
+    
+    echo
+    print_info "3️⃣  Spell checking..."
+    if [[ -x "scripts/spell-check.sh" ]]; then
+        if timeout 60s npx cspell "$OUTPUT_FILE" --no-must-find-files --locale en-GB 2>/dev/null; then
+            print_success "Spell checking passed"
+        else
+            print_warning "Spelling issues found"
+            quality_passed=false
+        fi
+    else
+        print_warning "Spell check script not found, skipping"
+    fi
+    
+    echo
+    print_info "4️⃣  Link checking..."
+    if [[ -x "scripts/link-check.sh" ]]; then
+        if timeout 30s npx markdown-link-check -q "$OUTPUT_FILE" 2>/dev/null; then
+            print_success "Link checking passed"
+        else
+            print_warning "Link issues found (may be expected for new projects)"
+        fi
+    else
+        print_warning "Link check script not found, skipping"
+    fi
+    
+    echo
+    if [[ "$quality_passed" == true ]]; then
+        print_success "✨ All quality checks passed!"
+    else
+        print_warning "Some quality issues found. Run 'scripts/check-quality.sh' for details."
+        print_info "Quality issues are common in generated READMEs and can be fixed manually."
+    fi
+}
+
 # Main generation function
 generate_readme() {
     local use_remote=false
     local force=false
+    local skip_quality=false
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -221,6 +304,10 @@ generate_readme() {
                 ;;
             --force)
                 force=true
+                shift
+                ;;
+            --skip-quality)
+                skip_quality=true
                 shift
                 ;;
             *)
@@ -336,10 +423,19 @@ generate_readme() {
     rm -f "$OUTPUT_FILE.bak"
 
     print_success "README.md generated successfully!"
+    
+    # Run quality checks on the generated README (unless skipped)
+    if [[ "$skip_quality" != true ]]; then
+        run_quality_checks
+    else
+        print_info "Quality checks skipped (--skip-quality flag used)"
+    fi
+    
     echo
     print_info "Next steps:"
     echo "  📝 Review and customize the generated README.md"
     echo "  🔍 Search for remaining [placeholders] and replace them"
+    echo "  🧹 Run 'scripts/check-quality.sh' for comprehensive quality checks"
     echo "  📁 Create docs/ structure if needed:"
     echo "     mkdir -p docs && touch docs/{QUICKSTART,USAGE,INSTALL,CONFIGURATION,ARCHITECTURE,ROADMAP,CONTRIBUTING,CODE_OF_CONDUCT,SECURITY}.md"
     echo "  📄 Add LICENSE file if needed"

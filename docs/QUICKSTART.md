@@ -20,12 +20,14 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 ### Option 2: Manual setup
 
 1. Download the generator:
+
    ```bash
    curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate -o generate
    chmod +x generate
    ```
 
 2. Run the interactive setup:
+
    ```bash
    ./generate
    ```

@@ -56,11 +56,13 @@ This creates a `docs/context.yaml` file used for README generation.
 ### Using README-TEMPLATE.md directly
 
 1. Copy the template:
+
    ```bash
    cp README-TEMPLATE.md README.md
    ```
 
 2. Create context file:
+
    ```bash
    mkdir -p docs
    cat > docs/context.yaml << EOF
@@ -72,10 +74,11 @@ This creates a `docs/context.yaml` file used for README generation.
    ```
 
 3. Replace placeholders manually:
+
    ```bash
    # Find all placeholders
    grep -n "{{.*}}" README.md
-   
+
    # Find bracket placeholders
    grep -n "\[.*\]" README.md
    ```
@@ -83,6 +86,7 @@ This creates a `docs/context.yaml` file used for README generation.
 ### Template customisation
 
 The template includes these sections:
+
 - **Demo** - Live examples or screenshots
 - **TL;DR** - Elevator pitch
 - **Context** - Machine-readable metadata
@@ -140,6 +144,7 @@ Add your own placeholders to the template:
 
 ```markdown
 # {{CUSTOM_PLACEHOLDER}}
+
 This will be replaced: {{MY_VARIABLE}}
 ```
 
@@ -154,6 +159,7 @@ sed -i "s/{{CUSTOM_PLACEHOLDER}}/My Value/g" README.md
 The framework adapts to different project types:
 
 **Web applications:**
+
 ```yaml
 domain: web application
 interfaces: REST API, GraphQL
@@ -163,6 +169,7 @@ deployment: Docker, Vercel
 ```
 
 **CLI tools:**
+
 ```yaml
 domain: command-line tool
 interfaces: CLI, config files
@@ -172,6 +179,7 @@ deployment: pip, homebrew
 ```
 
 **Libraries/SDKs:**
+
 ```yaml
 domain: software library
 interfaces: API, SDK
@@ -185,6 +193,7 @@ deployment: npm, pypi, maven
 ### Common issues
 
 **Script fails to download:**
+
 ```bash
 # Check internet connection
 curl -I https://github.com
@@ -194,18 +203,21 @@ wget https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate
 ```
 
 **Permission denied:**
+
 ```bash
 # Make script executable
 chmod +x generate
 ```
 
 **Template not found:**
+
 ```bash
 # Use remote template
 ./generate --remote
 ```
 
 **Context file issues:**
+
 ```bash
 # Validate YAML syntax
 python -c "import yaml; yaml.safe_load(open('docs/context.yaml'))"

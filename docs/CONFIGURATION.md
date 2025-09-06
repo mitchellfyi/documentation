@@ -6,19 +6,19 @@ Configuration options for the documentation framework and quality tools.
 
 ### Command-line options
 
-| Option     | Description                           | Default |
-|------------|---------------------------------------|---------|
-| `--help`   | Show usage information               | -       |
-| `--version`| Show version number                  | -       |
-| `--remote` | Download fresh template from GitHub | false   |
-| `--force`  | Overwrite existing files without asking | false |
+| Option      | Description                             | Default |
+| ----------- | --------------------------------------- | ------- |
+| `--help`    | Show usage information                  | -       |
+| `--version` | Show version number                     | -       |
+| `--remote`  | Download fresh template from GitHub     | false   |
+| `--force`   | Overwrite existing files without asking | false   |
 
 ### Environment variables
 
-| Variable              | Description                    | Default |
-|-----------------------|--------------------------------|---------|
-| `TEMPLATE_URL`        | Custom template URL           | GitHub raw URL |
-| `DOCS_GENERATOR_DEBUG`| Enable debug output           | false   |
+| Variable               | Description         | Default        |
+| ---------------------- | ------------------- | -------------- |
+| `TEMPLATE_URL`         | Custom template URL | GitHub raw URL |
+| `DOCS_GENERATOR_DEBUG` | Enable debug output | false          |
 
 Example usage:
 
@@ -37,16 +37,16 @@ The `docs/context.yaml` file drives README generation:
 ### Required fields
 
 ```yaml
-project: "Your Project Name"        # Project title
-domain: "web application"           # Project category
-audience: "developers"              # Primary users
-interfaces: "REST API, CLI"         # How users interact
-runtime: "Node.js 18+"              # Runtime requirements
-storage: "PostgreSQL"               # Data storage
-deployment: "Docker, Kubernetes"    # Deployment targets
-status: "stable"                    # Development status
-license: "MIT"                      # Licence type
-support: "GitHub Issues"            # Support channel
+project: "Your Project Name" # Project title
+domain: "web application" # Project category
+audience: "developers" # Primary users
+interfaces: "REST API, CLI" # How users interact
+runtime: "Node.js 18+" # Runtime requirements
+storage: "PostgreSQL" # Data storage
+deployment: "Docker, Kubernetes" # Deployment targets
+status: "stable" # Development status
+license: "MIT" # Licence type
+support: "GitHub Issues" # Support channel
 ```
 
 ### Optional fields
@@ -73,13 +73,13 @@ updated: "2024-12-01"
 
 ### Status values
 
-| Status        | Description                           |
-|---------------|---------------------------------------|
-| `experimental`| Early development, APIs may change    |
-| `beta`        | Feature-complete, testing in progress |
-| `stable`      | Production-ready, stable APIs         |
-| `maintenance` | Bug fixes only, no new features       |
-| `archived`    | No longer maintained                  |
+| Status         | Description                           |
+| -------------- | ------------------------------------- |
+| `experimental` | Early development, APIs may change    |
+| `beta`         | Feature-complete, testing in progress |
+| `stable`       | Production-ready, stable APIs         |
+| `maintenance`  | Bug fixes only, no new features       |
+| `archived`     | No longer maintained                  |
 
 ## Quality tool configuration
 
@@ -110,19 +110,19 @@ Create `.markdownlint.jsonc`:
 ```jsonc
 {
   // Disable rules that conflict with Prettier
-  "MD013": false,  // Line length
-  "MD033": false,  // HTML tags
-  "MD041": false,  // First line heading
-  
+  "MD013": false, // Line length
+  "MD033": false, // HTML tags
+  "MD041": false, // First line heading
+
   // Configure other rules
-  "MD007": { "indent": 2 },           // Unordered list indentation
+  "MD007": { "indent": 2 }, // Unordered list indentation
   "MD024": { "allow_different_nesting": true }, // Duplicate headings
-  "MD025": { "front_matter_title": "" },        // Single H1
-  "MD029": { "style": "ordered" },              // Ordered list style
-  
+  "MD025": { "front_matter_title": "" }, // Single H1
+  "MD029": { "style": "ordered" }, // Ordered list style
+
   // Enable stricter rules
-  "MD046": { "style": "fenced" },     // Code block style
-  "MD048": { "style": "backtick" }    // Code fence style
+  "MD046": { "style": "fenced" }, // Code block style
+  "MD048": { "style": "backtick" } // Code fence style
 }
 ```
 
@@ -159,19 +159,8 @@ Create `cspell.json`:
     "namespace",
     "namespaces"
   ],
-  "ignorePaths": [
-    "node_modules/**",
-    ".git/**",
-    "*.min.*",
-    "coverage/**",
-    "dist/**",
-    "build/**"
-  ],
-  "ignoreRegExpList": [
-    "\\bhttps?://[^\\s]+",
-    "\\b[A-Z0-9]{32,}\\b",
-    "\\b[a-f0-9]{40}\\b"
-  ]
+  "ignorePaths": ["node_modules/**", ".git/**", "*.min.*", "coverage/**", "dist/**", "build/**"],
+  "ignoreRegExpList": ["\\bhttps?://[^\\s]+", "\\b[A-Z0-9]{32,}\\b", "\\b[a-f0-9]{40}\\b"]
 }
 ```
 
@@ -226,8 +215,9 @@ Use Conventional Commits:
 ```
 
 Types:
+
 - `feat`: New feature
-- `fix`: Bug fix  
+- `fix`: Bug fix
 - `docs`: Documentation changes
 - `style`: Code style changes
 - `refactor`: Code refactoring
@@ -235,6 +225,7 @@ Types:
 - `chore`: Build/tooling changes
 
 Examples:
+
 ```
 docs: add API reference documentation
 feat(auth): implement OAuth2 integration
@@ -250,7 +241,7 @@ Use descriptive branch names:
 git checkout -b feat/user-authentication
 git checkout -b feat/payment-integration
 
-# Documentation branches  
+# Documentation branches
 git checkout -b docs/api-reference
 git checkout -b docs/deployment-guide
 
@@ -286,7 +277,7 @@ Recommended extensions in `.vscode/extensions.json`:
 {
   "recommendations": [
     "esbenp.prettier-vscode",
-    "davidanson.vscode-markdownlint", 
+    "davidanson.vscode-markdownlint",
     "streetsidesoftware.code-spell-checker",
     "yzhang.markdown-all-in-one",
     "shd101wyy.markdown-preview-enhanced"
@@ -314,21 +305,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          
+          node-version: "20"
+
       - name: Format check
         run: npx prettier . --check
-        
+
       - name: Lint Markdown
         run: npx markdownlint-cli2 "**/*.md" "#node_modules"
-        
+
       - name: Spell check
         run: npx cspell "**/*.md" --no-must-find-files --locale en-GB
-        
+
       - name: Link check
         run: |
           git ls-files '*.md' | xargs -I{} npx markdown-link-check -q {}
@@ -352,13 +343,13 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-      
+
   - repo: https://github.com/prettier/prettier
     rev: v3.0.0
     hooks:
       - id: prettier
         types_or: [markdown, yaml]
-        
+
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.35.0
     hooks:
@@ -390,14 +381,17 @@ vale --config .vale.ini .
 ### Common issues
 
 **Prettier conflicts with markdownlint:**
+
 - Disable MD013 (line length) in markdownlint config
 - Use `proseWrap: "preserve"` in Prettier config
 
 **Spell check false positives:**
+
 - Add technical terms to `cspell.json` words array
 - Use ignore patterns for URLs and hashes
 
 **Vale performance issues:**
+
 - Limit to specific file types: `[*.md]`
 - Exclude large directories in `.vale.ini`
 
@@ -430,7 +424,8 @@ docs/
 ### Documentation as code
 
 Treat documentation with same rigour as code:
+
 - Version control all config files
-- Use semantic versioning for major doc changes  
+- Use semantic versioning for major doc changes
 - Automate quality checks in CI/CD
 - Review documentation changes like code reviews

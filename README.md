@@ -15,8 +15,9 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 ```
 
 The tool will:
+
 1. **Guide you through setup** - Interactive questions to create `docs/context.yaml`
-2. **Generate README.md** - Populated from template with your project details  
+2. **Generate README.md** - Populated from template with your project details
 3. **Create docs scaffold** - Standard documentation structure
 4. **Show next steps** - Remaining customizations needed
 
@@ -25,20 +26,19 @@ The tool will:
 
 ---
 
-> **TL;DR**
-> This repository is a single source of truth for writing excellent documentation. It gives you a demo-first README pattern, a docs scaffold, **AI-friendly context**, and opinionated checklists backed by the best public guidance. See: Make a README, Awesome README, Diátaxis, and Google/Microsoft style guides. ([Make a README][1], [GitHub][2], [Diátaxis][3], [Google for Developers][4], [Microsoft Learn][5])
+> **TL;DR** This repository is a single source of truth for writing excellent documentation. It gives you a demo-first README pattern, a docs scaffold, **AI-friendly context**, and opinionated checklists backed by the best public guidance. See: Make a README, Awesome README, Diátaxis, and Google/Microsoft style guides. ([Make a README][1], [GitHub][2], [Diátaxis][3], [Google for Developers][4], [Microsoft Learn][5])
 
 ## Contents
 
-* [Quickstart](#quickstart)
-* [Usage](#usage)
-* [Principles](#principles)
-* [Structure](#structure)
-* [AI-readability](#ai-readability)
-* [Style](#style)
-* [Governance](#governance)
-* [Checklists](#checklists)
-* [References](#references)
+- [Quickstart](#quickstart)
+- [Usage](#usage)
+- [Principles](#principles)
+- [Structure](#structure)
+- [AI-readability](#ai-readability)
+- [Style](#style)
+- [Governance](#governance)
+- [Checklists](#checklists)
+- [References](#references)
 
 ---
 
@@ -54,28 +54,24 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 **Option 2: Manual setup**
 
 1. **Download and run the generator**
+
    ```bash
    curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/generate -o generate
    chmod +x generate
    ./generate
    ```
 
-2. **Follow the interactive prompts**
-   The tool will ask about your project and create `docs/context.yaml` automatically.
+2. **Follow the interactive prompts** The tool will ask about your project and create `docs/context.yaml` automatically.
 
-3. **Customize the generated README**
-   Review the output and replace any remaining `[placeholders]` with your specific details.
+3. **Customize the generated README** Review the output and replace any remaining `[placeholders]` with your specific details.
 
 **Additional setup:**
 
-4. **Pick a licence** and add `LICENSE`
-   If you don't add a licence, others cannot legally use or modify your code. Use **choosealicense.com** to decide. ([GitHub Docs][6], [Choose a License][7])
+4. **Pick a licence** and add `LICENSE` If you don't add a licence, others cannot legally use or modify your code. Use **choosealicense.com** to decide. ([GitHub Docs][6], [Choose a License][7])
 
-5. **Add a security policy** in `docs/SECURITY.md`
-   Tell users how to report vulnerabilities; GitHub can surface this automatically in the Security tab. ([GitHub Docs][8])
+5. **Add a security policy** in `docs/SECURITY.md` Tell users how to report vulnerabilities; GitHub can surface this automatically in the Security tab. ([GitHub Docs][8])
 
-6. **Adopt versioning and change logs**
-   Follow **SemVer** for versions and **Keep a Changelog** for human-readable release notes. ([Semantic Versioning][9], [keepachangelog.com][10])
+6. **Adopt versioning and change logs** Follow **SemVer** for versions and **Keep a Changelog** for human-readable release notes. ([Semantic Versioning][9], [keepachangelog.com][10])
 
 ---
 
@@ -94,18 +90,20 @@ curl -sSL https://raw.githubusercontent.com/mitchellfyi/documentation/main/gener
 ```
 
 **Options:**
+
 - `--remote` - Download fresh template from GitHub
-- `--force` - Overwrite existing files without asking  
+- `--force` - Overwrite existing files without asking
 - `--help` - Show usage information
 
-**Interactive Setup:**
-If no `docs/context.yaml` exists, the tool will ask guided questions:
+**Interactive Setup:** If no `docs/context.yaml` exists, the tool will ask guided questions:
+
 - Project name and description
-- Domain and audience  
+- Domain and audience
 - Technical requirements
 - License and support channels
 
 **Output:**
+
 - `README.md` - Generated from template with your details
 - `docs/context.yaml` - Machine-readable project metadata
 - `docs/` - Documentation scaffold structure
@@ -126,29 +124,27 @@ If no `docs/context.yaml` exists, the tool will ask guided questions:
 12. **Support** – where to ask; response expectations.
 13. **Contributing / Code of Conduct** – invite and set expectations.
 14. **Security** – reporting path and expectations.
-15. **Licence** – name and link.
-    This pattern reflects community examples and guidance from curated README lists. ([GitHub][2])
+15. **Licence** – name and link. This pattern reflects community examples and guidance from curated README lists. ([GitHub][2])
 
 ### Documentation model (Diátaxis)
 
 Organise deeper docs into the four complementary types:
 
-* **Tutorials** – learning-oriented, step-by-step.
-* **How-to guides** – goal-oriented recipes.
-* **Reference** – accurate, comprehensive API/config facts.
-* **Explanation** – concepts, rationale, trade-offs.
-  This separation matches user needs and reduces doc drift. ([Diátaxis][3])
+- **Tutorials** – learning-oriented, step-by-step.
+- **How-to guides** – goal-oriented recipes.
+- **Reference** – accurate, comprehensive API/config facts.
+- **Explanation** – concepts, rationale, trade-offs. This separation matches user needs and reduces doc drift. ([Diátaxis][3])
 
 ---
 
 ## Principles
 
-* **Demo first** – show value in seconds; then let readers dig.
-* **Clarity over cleverness** – short sentences, concrete examples.
-* **Split depth** – README for overview; `docs/` for detail.
-* **Evidence-based** – benchmarks, links, or screenshots instead of claims.
-* **Accessibility** – alt text, headings, tables, and copy-pastable code.
-* **Legal and safety basics** – licence, security policy, versioning, changelog. ([GitHub Docs][6], [Semantic Versioning][9], [keepachangelog.com][10])
+- **Demo first** – show value in seconds; then let readers dig.
+- **Clarity over cleverness** – short sentences, concrete examples.
+- **Split depth** – README for overview; `docs/` for detail.
+- **Evidence-based** – benchmarks, links, or screenshots instead of claims.
+- **Accessibility** – alt text, headings, tables, and copy-pastable code.
+- **Legal and safety basics** – licence, security policy, versioning, changelog. ([GitHub Docs][6], [Semantic Versioning][9], [keepachangelog.com][10])
 
 ---
 
@@ -179,8 +175,8 @@ Recommended repository layout:
 
 **Notes**
 
-* Use *relative links* so docs render in and out of GitHub.
-* GitHub recognises and surfaces README content and common community health files automatically. ([GitHub Docs][11])
+- Use _relative links_ so docs render in and out of GitHub.
+- GitHub recognises and surfaces README content and common community health files automatically. ([GitHub Docs][11])
 
 ---
 
@@ -202,16 +198,15 @@ Help agents (and new teammates) get context without guessing.
 
 Adopt an established developer documentation style; don’t invent your own.
 
-* **Google developer documentation style guide** – voice/tone, terminology, grammar. ([Google for Developers][4])
-* **Microsoft Writing Style Guide** – concise, task-oriented, inclusive language; quick-start guidance for contributors. ([Microsoft Learn][5])
+- **Google developer documentation style guide** – voice/tone, terminology, grammar. ([Google for Developers][4])
+- **Microsoft Writing Style Guide** – concise, task-oriented, inclusive language; quick-start guidance for contributors. ([Microsoft Learn][5])
 
 **Practices**
 
-* Use second person (“you”), present tense, and active voice.
-* Prefer concrete nouns and verbs over abstractions.
-* Use consistent terminology and casing.
-* Keep paragraphs short; prefer lists and examples.
-  (See style guides above for specifics.)
+- Use second person (“you”), present tense, and active voice.
+- Prefer concrete nouns and verbs over abstractions.
+- Use consistent terminology and casing.
+- Keep paragraphs short; prefer lists and examples. (See style guides above for specifics.)
 
 ---
 
@@ -227,8 +222,8 @@ Add `docs/SECURITY.md` describing how to report vulnerabilities and what to expe
 
 ### Versioning and change management
 
-* **Semantic Versioning (SemVer)** clarifies the meaning of version numbers (MAJOR.MINOR.PATCH). ([Semantic Versioning][9])
-* **Keep a Changelog** provides a consistent human-readable format for release notes. ([keepachangelog.com][10])
+- **Semantic Versioning (SemVer)** clarifies the meaning of version numbers (MAJOR.MINOR.PATCH). ([Semantic Versioning][9])
+- **Keep a Changelog** provides a consistent human-readable format for release notes. ([keepachangelog.com][10])
 
 ---
 
@@ -236,35 +231,35 @@ Add `docs/SECURITY.md` describing how to report vulnerabilities and what to expe
 
 ### Pre-release
 
-* [ ] README has **Demo**, **Quickstart**, **Usage** with expected output.
-* [ ] `docs/` scaffold created and linked from README.
-* [ ] `LICENSE` present; licence named in README. ([Choose a License][7])
-* [ ] `docs/SECURITY.md` with reporting path. ([GitHub Docs][8])
-* [ ] Versioning policy (SemVer) and `CHANGELOG.md` in place. ([Semantic Versioning][9], [keepachangelog.com][10])
-* [ ] Screenshots/GIFs have alt text; code blocks are copy-pastable.
-* [ ] Relative links resolve; anchors are stable. ([GitHub Docs][11])
+- [ ] README has **Demo**, **Quickstart**, **Usage** with expected output.
+- [ ] `docs/` scaffold created and linked from README.
+- [ ] `LICENSE` present; licence named in README. ([Choose a License][7])
+- [ ] `docs/SECURITY.md` with reporting path. ([GitHub Docs][8])
+- [ ] Versioning policy (SemVer) and `CHANGELOG.md` in place. ([Semantic Versioning][9], [keepachangelog.com][10])
+- [ ] Screenshots/GIFs have alt text; code blocks are copy-pastable.
+- [ ] Relative links resolve; anchors are stable. ([GitHub Docs][11])
 
 ### Maintenance
 
-* [ ] Update demo/GIF when UX changes.
-* [ ] Review Quickstart quarterly.
-* [ ] Validate links in CI.
-* [ ] Keep status current (active, maintenance, archived).
-* [ ] Review `context.yaml` on each release.
+- [ ] Update demo/GIF when UX changes.
+- [ ] Review Quickstart quarterly.
+- [ ] Validate links in CI.
+- [ ] Keep status current (active, maintenance, archived).
+- [ ] Review `context.yaml` on each release.
 
 ---
 
 ## References
 
-* **Make a README** – what, why, and section guidance (with template). ([Make a README][1])
-* **Awesome README** – curated examples and patterns. ([GitHub][2])
-* **How to write a good README** – practical, persuasive approach. ([GitHub][13])
-* **Diátaxis** – tutorials, how-tos, reference, explanation framework. ([Diátaxis][3])
-* **Google developer documentation style guide** – editorial standards. ([Google for Developers][4])
-* **Microsoft Writing Style Guide** – concise, inclusive, task-first writing. ([Microsoft Learn][5])
-* **Choose a Licence** – selecting an OS licence. ([Choose a License][7])
-* **Keep a Changelog** – changelog format and rationale. ([keepachangelog.com][10])
-* **Semantic Versioning** – versioning rules and expectations. ([Semantic Versioning][9])
+- **Make a README** – what, why, and section guidance (with template). ([Make a README][1])
+- **Awesome README** – curated examples and patterns. ([GitHub][2])
+- **How to write a good README** – practical, persuasive approach. ([GitHub][13])
+- **Diátaxis** – tutorials, how-tos, reference, explanation framework. ([Diátaxis][3])
+- **Google developer documentation style guide** – editorial standards. ([Google for Developers][4])
+- **Microsoft Writing Style Guide** – concise, inclusive, task-first writing. ([Microsoft Learn][5])
+- **Choose a Licence** – selecting an OS licence. ([Choose a License][7])
+- **Keep a Changelog** – changelog format and rationale. ([keepachangelog.com][10])
+- **Semantic Versioning** – versioning rules and expectations. ([Semantic Versioning][9])
 
 ---
 

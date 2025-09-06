@@ -6,7 +6,9 @@ Remove any section marked optional if not relevant.
 -->
 
 # {{PROJECT_NAME}}
-{{PROJECT_TAGLINE}}  
+
+{{PROJECT_TAGLINE}}
+
 <!-- One sentence. Category and outcome. Example: "Time-series toolkit for fast anomaly detection in production." -->
 
 <!-- Badges — keep only those that help decisions -->
@@ -19,6 +21,7 @@ Remove any section marked optional if not relevant.
 -->
 
 ## Demo
+
 **Live demo**: {{DEMO_URL}}  
 ![{{DEMO_GIF_ALT}}](docs/assets/{{DEMO_GIF_FILENAME}})  
 <sub>{{DEMO_CAPTION}}</sub>
@@ -33,6 +36,7 @@ Remove any section marked optional if not relevant.
 ---
 
 ## Contents
+
 - [Quickstart](#quickstart)
 - [Usage](#usage)
 - [Features](#features)
@@ -50,7 +54,9 @@ Remove any section marked optional if not relevant.
 ---
 
 ## Context for humans and AI
+
 <!-- Keep this short and explicit. Good for newcomers and tooling. -->
+
 ```yaml
 project: {{PROJECT_NAME}}
 domain: {{DOMAIN}}                  # e.g. time-series, web app, compiler, ops tool
@@ -62,7 +68,7 @@ deployment: {{DEPLOY_TARGETS}}      # e.g. Docker, K8s, serverless
 status: {{STATUS}}                  # experimental, beta, stable, maintenance, archived
 license: {{LICENSE_SHORT}}          # e.g. MIT, Apache-2.0
 support: {{PRIMARY_SUPPORT_CHANNEL}}# e.g. GitHub Issues, Discussions, email
-````
+```
 
 ---
 
@@ -80,9 +86,9 @@ support: {{PRIMARY_SUPPORT_CHANNEL}}# e.g. GitHub Issues, Discussions, email
 
 Other installs:
 
-* Docker: see [docs/INSTALL.md](docs/INSTALL.md#docker)
-* From source: see [docs/INSTALL.md](docs/INSTALL.md#from-source)
-* Package managers: see [docs/INSTALL.md](docs/INSTALL.md#packages)
+- Docker: see [docs/INSTALL.md](docs/INSTALL.md#docker)
+- From source: see [docs/INSTALL.md](docs/INSTALL.md#from-source)
+- Package managers: see [docs/INSTALL.md](docs/INSTALL.md#packages)
 
 ---
 
@@ -108,17 +114,17 @@ More examples and tutorials: see [docs/USAGE.md](docs/USAGE.md)
 
 <!-- Capabilities and outcomes, not internals. Aim for 5–7 bullets, grouped if useful. -->
 
-* {{FEATURE\_1}} - {{FEATURE\_1\_BENEFIT}}
-* {{FEATURE\_2}} - {{FEATURE\_2\_BENEFIT}}
-* {{FEATURE\_3}} - {{FEATURE\_3\_BENEFIT}}
-* {{FEATURE\_4}} - {{FEATURE\_4\_BENEFIT}}
-* {{FEATURE\_5}} - {{FEATURE\_5\_BENEFIT}}
+- {{FEATURE\_1}} - {{FEATURE\_1\_BENEFIT}}
+- {{FEATURE\_2}} - {{FEATURE\_2\_BENEFIT}}
+- {{FEATURE\_3}} - {{FEATURE\_3\_BENEFIT}}
+- {{FEATURE\_4}} - {{FEATURE\_4\_BENEFIT}}
+- {{FEATURE\_5}} - {{FEATURE\_5\_BENEFIT}}
 
 Optional highlights:
 
-* Performance: {{PERF\_CLAIM}}
-* Scale: {{SCALE\_CLAIM}}
-* Extensibility: {{EXTENSIBILITY\_CLAIM}}
+- Performance: {{PERF\_CLAIM}}
+- Scale: {{SCALE\_CLAIM}}
+- Extensibility: {{EXTENSIBILITY\_CLAIM}}
 
 ---
 
@@ -126,10 +132,10 @@ Optional highlights:
 
 <!-- Be exact to reduce surprises. -->
 
-* OS: {{SUPPORTED\_OS}}
-* Runtime: {{RUNTIME\_VERSIONS}}
-* Hardware: {{CPU\_GPU\_REQUIREMENTS}}
-* External deps: {{EXTERNAL\_DEPENDENCIES}}  <!-- e.g. Postgres 14+, CUDA 12, Java 17 -->
+- OS: {{SUPPORTED\_OS}}
+- Runtime: {{RUNTIME\_VERSIONS}}
+- Hardware: {{CPU\_GPU\_REQUIREMENTS}}
+- External deps: {{EXTERNAL\_DEPENDENCIES}} <!-- e.g. Postgres 14+, CUDA 12, Java 17 -->
 
 Compatibility notes and breaking changes: see [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)
 
@@ -153,18 +159,18 @@ Full configuration reference: [docs/CONFIGURATION.md](docs/CONFIGURATION.md)
 
 <!-- Why this over alternatives. Keep it honest. Link to more if needed. -->
 
-* {{DIFF\_POINT\_1}}
-* {{DIFF\_POINT\_2}}
-* {{DIFF\_POINT\_3}}
+- {{DIFF\_POINT\_1}}
+- {{DIFF\_POINT\_2}}
+- {{DIFF\_POINT\_3}}
 
 <details>
 <summary>Quick comparison</summary>
 
 | Feature             | {{PROJECT\_NAME}} | {{ALT\_A}} | {{ALT\_B}} |
 | ------------------- | ----------------- | ---------- | ---------- |
-| {{FEATURE\_ROW\_1}} | ✅                 | ❌          | ✅          |
-| {{FEATURE\_ROW\_2}} | ✅                 | ✅          | ❌          |
-| {{FEATURE\_ROW\_3}} | ✅                 | ❌          | ❌          |
+| {{FEATURE\_ROW\_1}} | ✅                | ❌         | ✅         |
+| {{FEATURE\_ROW\_2}} | ✅                | ✅         | ❌         |
+| {{FEATURE\_ROW\_3}} | ✅                | ❌         | ❌         |
 
 More: [docs/ALTERNATIVES.md](docs/ALTERNATIVES.md)
 
@@ -178,7 +184,7 @@ More: [docs/ALTERNATIVES.md](docs/ALTERNATIVES.md)
 
 {{ARCHITECTURE\_ONE\_PARAGRAPH}}
 
-![{{ARCH\_DIAGRAM\_ALT}}](docs/assets/{{ARCH_DIAGRAM_FILENAME}})
+![{{ARCH_DIAGRAM_ALT}}](docs/assets/{{ARCH_DIAGRAM_FILENAME}})
 
 Deep dive: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
@@ -186,12 +192,11 @@ Deep dive: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## Roadmap and status
 
-Status: **{{STATUS}}**
-Upcoming:
+Status: **{{STATUS}}** Upcoming:
 
-* {{ROADMAP\_ITEM\_1}}
-* {{ROADMAP\_ITEM\_2}}
-* {{ROADMAP\_ITEM\_3}}
+- {{ROADMAP\_ITEM\_1}}
+- {{ROADMAP\_ITEM\_2}}
+- {{ROADMAP\_ITEM\_3}}
 
 Milestones and issues: {{MILESTONES\_URL}}
 
@@ -199,12 +204,11 @@ Milestones and issues: {{MILESTONES\_URL}}
 
 ## Support
 
-* Issues: {{ISSUES\_URL}}
-* Discussions or chat: {{DISCUSSIONS\_OR\_CHAT\_URL}}
-* Documentation index: [docs/](docs/)
+- Issues: {{ISSUES\_URL}}
+- Discussions or chat: {{DISCUSSIONS\_OR\_CHAT\_URL}}
+- Documentation index: [docs/](docs/)
 
-Response expectations: {{SLA\_OR\_EXPECTATIONS}}
-Commercial support: {{COMMERCIAL\_SUPPORT\_CONTACT}}  <!-- optional -->
+Response expectations: {{SLA\_OR\_EXPECTATIONS}} Commercial support: {{COMMERCIAL\_SUPPORT\_CONTACT}} <!-- optional -->
 
 ---
 
@@ -212,18 +216,16 @@ Commercial support: {{COMMERCIAL\_SUPPORT\_CONTACT}}  <!-- optional -->
 
 We welcome issues, discussions, and pull requests.
 
-* Start here: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
-* Please read our [docs/CODE\_OF\_CONDUCT.md](docs/CODE_OF_CONDUCT.md)
+- Start here: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
+- Please read our [docs/CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md)
 
-Dev setup: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
-PR guidelines: [docs/CONTRIBUTING.md#pull-requests](docs/CONTRIBUTING.md#pull-requests)
+Dev setup: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) PR guidelines: [docs/CONTRIBUTING.md#pull-requests](docs/CONTRIBUTING.md#pull-requests)
 
 ---
 
 ## Security
 
-If you believe you have found a vulnerability, please follow our
-security policy: [docs/SECURITY.md](docs/SECURITY.md) and email **{{SECURITY\_CONTACT}}**.
+If you believe you have found a vulnerability, please follow our security policy: [docs/SECURITY.md](docs/SECURITY.md) and email **{{SECURITY\_CONTACT}}**.
 
 Responsible disclosure is appreciated.
 
@@ -237,20 +239,22 @@ Responsible disclosure is appreciated.
 
 ## Acknowledgements
 
-* {{CREDIT\_1}}
-* {{CREDIT\_2}}
-* {{SPONSOR\_OR\_GRANT}}
+- {{CREDIT\_1}}
+- {{CREDIT\_2}}
+- {{SPONSOR\_OR\_GRANT}}
 
 <!-- Optional extras — remove if not needed -->
 
 ## Deploy (optional)
 
-* Docker: [docs/INSTALL.md#docker](docs/INSTALL.md#docker)
-* Cloud template: [docs/DEPLOY.md](docs/DEPLOY.md)
+- Docker: [docs/INSTALL.md#docker](docs/INSTALL.md#docker)
+- Cloud template: [docs/DEPLOY.md](docs/DEPLOY.md)
 
 ## Maintainers (optional)
 
-* {{MAINTAINER\_NAME}} - {{CONTACT\_OR\_HANDLE}}
-* {{MAINTAINER\_NAME}} - {{CONTACT\_OR\_HANDLE}}
+- {{MAINTAINER\_NAME}} - {{CONTACT\_OR\_HANDLE}}
+- {{MAINTAINER\_NAME}} - {{CONTACT\_OR\_HANDLE}}
+
+```
 
 ```

@@ -1,0 +1,31 @@
+{
+  "version": "0.2",
+  "language": "en-GB",
+  "words": [
+    "AGENTS",
+    "diataxis",
+    "markdownlint",
+    "cspell",
+    "npx",
+    "pipx",
+    "monorepo",
+    "monorepos",
+    "devDeps",
+    "readme",
+    "quickstart",
+    "roadmap",
+    "changelog",
+    "gitignore",
+    "github",
+    "yaml",
+    "jsonc",
+    "timeouts",
+    "CLI",
+    "VCS"
+  ],
+  "ignorePaths": ["node_modules/**", ".git/**", "*.min.js", "*.min.css"],
+  "files": ["**/*.md", "**/*.txt"],
+  "flagWords": [],
+  "allowCompoundWords": true,
+  "caseSensitive": false
+}
