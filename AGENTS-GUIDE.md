@@ -120,9 +120,14 @@ Keep it short, explicit, and machine-parsable. Use H2/H3 headings and bullet lis
 
 ### Build, test, and quality gates
 
-* One canonical build command.
-* One canonical full test command and how to run subsets.
-* Linters, type-checkers, coverage thresholds, mutation tests if any.
+* One canonical build command **with timeout** (e.g., `timeout 60s npm run build`).
+* One canonical full test command and how to run subsets **with timeouts** (e.g., `timeout 120s npm test`).
+* Linters, type-checkers, coverage thresholds, mutation tests if any **with appropriate timeouts**.
+* **CLI safety requirements:**
+  * All commands must use timeouts (max 60s for most operations)
+  * Commands must complete without user interaction
+  * Must exit cleanly with proper status codes
+  * Error handling with meaningful messages
 * Explicit expectation: **fail the task if these fail.**
   *(Agents use exactly what you list.)* ([docs.factory.ai][7])
 
@@ -146,12 +151,36 @@ Keep it short, explicit, and machine-parsable. Use H2/H3 headings and bullet lis
 * Never commit secrets - use env or secret store.
 * Banned APIs, unsafe patterns, or data-handling rules.
 * Protected files or directories agents must not touch.
+* **Never make destructive changes without explicit human approval** - always ask and clarify what will happen before:
+  * Deleting files or directories
+  * Overwriting existing content
+  * Modifying core functionality
+  * Changing configuration that affects other users
+* **CLI command safety rules:**
+  * Use timeouts for all commands (max 60s for most operations)
+  * Force non-interactive mode with appropriate flags
+  * Ensure clean exit with proper status codes
+  * Handle errors gracefully with meaningful messages
   *(Treat `AGENTS.md` like README in terms of public visibility - no secrets.)* ([All About Artificial][10])
 
 ### Scope limits
 
 * What the agent must not attempt (eg cloud infra changes, data migrations without approval).
 * Escalation path - when to hand off to a human.
+
+### Operational guidelines
+
+* **Research and validation requirements:**
+  * Always check documentation first before making changes
+  * Look up current best practices for the technology being used
+  * Validate external sources and references
+  * Cross-reference against relevant standards and style guides
+* **CI/CD and workflow compliance:**
+  * Run all pre-commit hooks and ensure they pass
+  * Verify CI workflows will pass before submitting
+  * Fix issues properly (root causes, not workarounds)
+  * Preserve existing functionality while making improvements
+  * Test thoroughly in clean environments
 
 ---
 

@@ -111,14 +111,21 @@ Health check:
 
 <!-- One true way to build and validate. Agents run these before PR. -->
 
-* Build: `{{BUILD_CMD}}`
-* Unit tests: `{{TEST_UNIT_CMD}}`
-* Integration tests: `{{TEST_INT_CMD}}`
-* Run a subset: `{{TEST_FILTER_CMD}}`          # e.g. pytest -k "name" / pnpm test -- <pattern>
-* Type check: `{{TYPECHECK_CMD}}`
-* Lint: `{{LINT_CMD}}`
-* Format: `{{FORMAT_CMD}}`
-* Coverage threshold: {{COVERAGE\_MIN}}% - enforce with `{{COVERAGE_CMD}}`
+**⚠️ CLI Command Safety Rules:**
+* **Use timeouts** - All CLI commands must have sensible timeouts (max 60s for most operations)
+* **Non-interactive mode** - Commands must complete without user interaction and return to CLI
+* **Clean exit** - All commands must exit cleanly with proper status codes
+* **Error handling** - Check command exit codes and handle failures appropriately
+
+**Commands with timeouts:**
+* Build: `timeout {{BUILD_TIMEOUT|60}}s {{BUILD_CMD}}`
+* Unit tests: `timeout {{TEST_TIMEOUT|120}}s {{TEST_UNIT_CMD}}`
+* Integration tests: `timeout {{INT_TEST_TIMEOUT|300}}s {{TEST_INT_CMD}}`
+* Run a subset: `timeout {{TEST_TIMEOUT|120}}s {{TEST_FILTER_CMD}}`          # e.g. pytest -k "name" / pnpm test -- <pattern>
+* Type check: `timeout {{TYPECHECK_TIMEOUT|30}}s {{TYPECHECK_CMD}}`
+* Lint: `timeout {{LINT_TIMEOUT|30}}s {{LINT_CMD}}`
+* Format: `timeout {{FORMAT_TIMEOUT|30}}s {{FORMAT_CMD}}`
+* Coverage threshold: {{COVERAGE\_MIN}}% - enforce with `timeout {{COVERAGE_TIMEOUT|60}}s {{COVERAGE_CMD}}`
 
 **Success criterion:** format + lint + type check + build + all tests + coverage ≥ threshold must pass.
 
@@ -166,6 +173,11 @@ PR template: [docs/PULL\_REQUEST\_TEMPLATE.md](docs/PULL_REQUEST_TEMPLATE.md)
 * Do not log PII or secrets - scrub in tests and fixtures
 * Do not modify protected paths: `{{PROTECTED_GLOB_1}}`, `{{PROTECTED_GLOB_2}}`
 * Approved licences only: {{ALLOWED\_LICENSES}} - denylist: {{DENIED\_LICENSES}}
+* **Never make destructive changes without explicit human approval** - always ask and clarify what will happen before:
+  * Deleting files or directories
+  * Overwriting existing content
+  * Modifying core functionality
+  * Changing configuration that affects other users
 * Dependency hygiene:
 
   * Audit: `{{DEP_AUDIT_CMD}}`
@@ -191,6 +203,48 @@ Security policy: [docs/SECURITY.md](docs/SECURITY.md)
 * {{GOTCHA\_1}}  # e.g. After adding a model, run {{MIGRATE\_CMD}}
 * {{GOTCHA\_2}}  # e.g. Frontend uses pnpm, not npm
 * {{GOTCHA\_3}}
+
+---
+
+## Operational guidelines for agents
+
+### Research and validation requirements
+
+* **Always check documentation first** - Read existing docs, README, and issue history before making changes
+* **Look up best practices** - Research current best practices for the technology/approach being used
+* **Validate external sources** - Ensure links and references are current and authoritative
+* **Cross-reference standards** - Check against relevant style guides, RFCs, or industry standards
+
+### CI/CD and workflow compliance
+
+* **Run all pre-commit hooks** - Ensure local quality gates pass before committing
+* **Verify CI workflows** - Check that GitHub Actions or other CI systems will pass
+* **Fix issues properly** - Address root causes, not symptoms; avoid workarounds that mask problems
+* **Preserve functionality** - Never break existing features while fixing issues
+* **Test thoroughly** - Validate changes work in clean environments
+
+### Command execution standards
+
+* **Timeout all commands** - Use `timeout` command or equivalent for all CLI operations
+* **Force non-interactive mode** - Use flags like `--yes`, `--non-interactive`, `--batch` where available
+* **Validate clean exit** - Check exit codes and ensure commands complete properly
+* **Handle errors gracefully** - Provide meaningful error messages and recovery steps
+
+**Example safe command patterns:**
+```bash
+# Good: with timeout and non-interactive flags
+timeout 30s {{PKG_INSTALL_CMD}} --silent --no-progress
+
+# Good: with error handling
+if ! timeout 60s {{BUILD_CMD}}; then
+    echo "Build failed, checking logs..."
+    {{BUILD_LOGS_CMD}}
+    exit 1
+fi
+
+# Bad: no timeout, potentially interactive
+{{PKG_INSTALL_CMD}}
+```
 
 ---
 

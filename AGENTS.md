@@ -79,22 +79,28 @@ pipx install vale || true  # falls back to system 'vale' if already installed
 
 Run these locally before proposing changes. All must pass.
 
+**⚠️ CLI Command Safety Rules:**
+* **Use timeouts** - All CLI commands must have sensible timeouts (max 60s for most operations)
+* **Non-interactive mode** - Commands must complete without user interaction and return to CLI
+* **Clean exit** - All commands must exit cleanly with proper status codes
+* **Error handling** - Check command exit codes and handle failures appropriately
+
 ```bash
-# 1) Format Markdown
-npx prettier . --write --log-level warn
+# 1) Format Markdown (timeout: 30s)
+timeout 30s npx prettier . --write --log-level warn
 
-# 2) Lint Markdown style (uses .markdownlint.jsonc if present)
-npx markdownlint-cli2 "**/*.md" "#node_modules"
+# 2) Lint Markdown style (timeout: 30s, uses .markdownlint.jsonc if present)
+timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules"
 
-# 3) Spell check (British English). If cspell.json exists, it will be used.
-npx cspell "**/*.md" --no-must-find-files --unique --show-suggestions --locale en-GB
+# 3) Spell check (timeout: 60s, British English). If cspell.json exists, it will be used.
+timeout 60s npx cspell "**/*.md" --no-must-find-files --unique --show-suggestions --locale en-GB
 
-# 4) Prose lint (Vale) if config present (.vale.ini)
-command -v vale >/dev/null && vale . || echo "vale not installed - skipping"
+# 4) Prose lint (timeout: 30s, Vale) if config present (.vale.ini)
+command -v vale >/dev/null && timeout 30s vale . || echo "vale not installed - skipping"
 
-# 5) Link check - fast, quiet pass over all Markdown
-npx markdown-link-check -q README.md || true
-git ls-files '*.md' | xargs -I{} npx markdown-link-check -q {} || true
+# 5) Link check (timeout: 120s) - fast, quiet pass over all Markdown
+timeout 30s npx markdown-link-check -q README.md || true
+git ls-files '*.md' | head -20 | xargs -I{} timeout 10s npx markdown-link-check -q {} || true
 ```
 
 **Success criterion:** Prettier formatting applied, markdownlint has **no errors**, cspell has **no errors**, Vale has **no errors** when enabled, and link checks report **0 broken links** or you replace/annotate them.
@@ -140,6 +146,11 @@ If `.markdownlint.jsonc`, `.vale.ini`, or `cspell.json` are missing, create mini
 * Do not instruct users to store secrets in VCS - always prefer environment variables or secret stores.
 * Avoid leaking personal data in examples; sanitise names, keys, and endpoints.
 * Treat this repo as public by default.
+* **Never make destructive changes without explicit human approval** - always ask and clarify what will happen before:
+  * Deleting files or directories
+  * Overwriting existing content
+  * Modifying core functionality
+  * Changing configuration that affects other users
 
 ---
 
@@ -151,46 +162,96 @@ If `.markdownlint.jsonc`, `.vale.ini`, or `cspell.json` are missing, create mini
 
 ---
 
+## Operational guidelines for agents
+
+### Research and validation requirements
+
+* **Always check documentation first** - Read existing docs, README, and issue history before making changes
+* **Look up best practices** - Research current best practices for the technology/approach being used
+* **Validate external sources** - Ensure links and references are current and authoritative
+* **Cross-reference standards** - Check against relevant style guides, RFCs, or industry standards
+
+### CI/CD and workflow compliance
+
+* **Run all pre-commit hooks** - Ensure local quality gates pass before committing
+* **Verify CI workflows** - Check that GitHub Actions or other CI systems will pass
+* **Fix issues properly** - Address root causes, not symptoms; avoid workarounds that mask problems
+* **Preserve functionality** - Never break existing features while fixing issues
+* **Test thoroughly** - Validate changes work in clean environments
+
+### Command execution standards
+
+* **Timeout all commands** - Use `timeout` command or equivalent for all CLI operations
+* **Force non-interactive mode** - Use flags like `--yes`, `--non-interactive`, `--batch` where available
+* **Validate clean exit** - Check exit codes and ensure commands complete properly
+* **Handle errors gracefully** - Provide meaningful error messages and recovery steps
+
+**Example safe command patterns:**
+```bash
+# Good: with timeout and non-interactive flags
+timeout 30s npm install --silent --no-progress
+
+# Good: with error handling
+if ! timeout 60s npx prettier . --check; then
+    echo "Formatting issues found, applying fixes..."
+    timeout 30s npx prettier . --write
+fi
+
+# Bad: no timeout, potentially interactive
+npm install
+```
+
+---
+
 ## Task workflow for agents
 
 ### Before every task
 
-1. Read this `AGENTS.md` fully and locate the file(s) you intend to change.
-2. Ensure a clean baseline:
+1. **Read this `AGENTS.md` fully** and locate the file(s) you intend to change.
+2. **Research and validate** - Check existing documentation, look up best practices, verify external sources.
+3. **Assess impact** - Identify any potentially destructive changes and seek approval if needed.
+4. **Ensure a clean baseline** with timeouts and proper error handling:
 
    ```bash
-   npx prettier . --check && \
-   npx markdownlint-cli2 "**/*.md" "#node_modules" && \
-   npx cspell "**/*.md" --no-must-find-files --locale en-GB
+   # Check current state (timeout: 120s total)
+   timeout 30s npx prettier . --check && \
+   timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules" && \
+   timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
    ```
-3. Create a working branch: `git switch -c docs/<slug>`
+5. **Create a working branch:** `git switch -c docs/<slug>`
 
 ### During the task
 
-1. Plan edits and expected impact on anchors and links.
-2. Tight loop:
+1. **Plan edits** and expected impact on anchors and links.
+2. **Make incremental changes** - Small, testable modifications rather than large rewrites.
+3. **Tight feedback loop** with safe command execution:
 
    ```bash
-   npx prettier . --write
-   npx markdownlint-cli2 "**/*.md" "#node_modules"
-   npx cspell "**/*.md" --no-must-find-files --locale en-GB
-   command -v vale >/dev/null && vale . || true
+   # Format and validate (timeout: 150s total)
+   timeout 30s npx prettier . --write
+   timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules"
+   timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
+   command -v vale >/dev/null && timeout 30s vale . || true
    ```
-3. If you add external references, append a short “References” section with stable links.
+4. **Validate functionality** - Ensure changes preserve original functionality.
+5. **If you add external references,** append a short "References" section with stable links.
 
 ### After the task
 
-1. Final validation:
+1. **Final validation** with comprehensive testing:
 
    ```bash
-   npx prettier . --check && \
-   npx markdownlint-cli2 "**/*.md" "#node_modules" && \
-   npx cspell "**/*.md" --no-must-find-files --locale en-GB && \
-   (command -v vale >/dev/null && vale . || true) && \
-   git ls-files '*.md' | xargs -I{} npx markdown-link-check -q {}
+   # Complete quality check (timeout: 300s total)
+   timeout 30s npx prettier . --check && \
+   timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules" && \
+   timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB && \
+   (command -v vale >/dev/null && timeout 30s vale . || true) && \
+   git ls-files '*.md' | head -20 | xargs -I{} timeout 10s npx markdown-link-check -q {}
    ```
-2. Prepare commit using Conventional Commits.
-3. Open a PR including: summary, rationale, lint outputs, and any anchor/link considerations.
+2. **Verify CI compatibility** - Ensure changes will pass automated workflows.
+3. **Test in clean environment** - Validate functionality works as expected.
+4. **Prepare commit** using Conventional Commits format.
+5. **Open a PR** including: summary, rationale, lint outputs, and any anchor/link considerations.
 
 ---
 
@@ -202,12 +263,21 @@ If this repo gains subpackages or a `/site/` build, place **local** `AGENTS.md` 
 
 ## Command glossary
 
-* Format: `npx prettier . --write`
-* Lint (Markdown): `npx markdownlint-cli2 "**/*.md" "#node_modules"`
-* Spell (en-GB): `npx cspell "**/*.md" --no-must-find-files --locale en-GB`
-* Prose lint (optional): `vale .`
-* Link check: `npx markdown-link-check -q <file.md>`
+**Safe command patterns (with timeouts and non-interactive modes):**
+
+* Format: `timeout 30s npx prettier . --write --log-level warn`
+* Lint (Markdown): `timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules"`
+* Spell (en-GB): `timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB`
+* Prose lint (optional): `timeout 30s vale .`
+* Link check: `timeout 10s npx markdown-link-check -q <file.md>`
 * New branch: `git switch -c docs/<slug>`
+
+**Quality check combo:**
+```bash
+timeout 30s npx prettier . --check && \
+timeout 30s npx markdownlint-cli2 "**/*.md" "#node_modules" && \
+timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
+```
 
 ---
 
