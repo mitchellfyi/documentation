@@ -280,6 +280,29 @@ If `.markdownlint.jsonc`, `.vale.ini`, or `cspell.json` are missing, create mini
 
 ---
 
+## Coding style and lint rules summary
+
+**Quick reference**: All coding style and detailed guidelines are documented in [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md).
+
+**Configuration files**:
+
+- [.markdownlint.jsonc](.markdownlint.jsonc) - Markdown linting rules
+- [.prettierrc](.prettierrc) - Code formatting rules
+- [cspell.json](cspell.json) - Spell checking configuration
+- [.vale.ini](.vale.ini) - Prose linting configuration
+
+**Essential lint command agents must run**:
+
+```bash
+timeout 300s scripts/check-quality.sh
+```
+
+This runs the complete quality pipeline including formatting, markdown linting, spell checking, prose linting, and link validation. For individual tool commands, see the [Build, test, and quality gates](#build-test-and-quality-gates-docs) section above.
+
+**Expected behaviour**: Formatting must pass cleanly. Pre-existing markdown lint (84 errors) and spell check errors are acceptable - only fix errors you introduce.
+
+---
+
 ## Git and PR workflow
 
 ### Branch naming conventions
