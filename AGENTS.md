@@ -699,6 +699,34 @@ timeout 60s npx cspell "**/*.md" --no-must-find-files --locale en-GB
 
 ---
 
+## Agent Success Criteria Checklist
+
+**Copy this checklist into your PR description to demonstrate completion of all required steps:**
+
+```markdown
+### Agent Success Criteria
+
+- [ ] **Setup completed** - All dependencies installed and build verified
+- [ ] **Tests pass** - Quality pipeline runs successfully (`scripts/check-quality.sh`)
+- [ ] **Lint clean** - No new formatting, markdown, or spelling errors introduced
+- [ ] **Security verified** - No sensitive files (credentials, secrets, private data) modified or added
+- [ ] **Conventional Commit prepared** - Commit message follows format: `type: description`<br>
+  (e.g., `docs: add success criteria checklist`)
+- [ ] **Issue linked** - PR description includes "Fixes #XX" or "Closes #XX" reference
+- [ ] **Quality evidence** - Attached proof that all quality checks pass
+- [ ] **Functionality preserved** - Existing features and links remain working
+- [ ] **Changes minimal** - Only modified files necessary to address the specific issue
+```
+
+**Usage instructions:**
+
+1. Copy the checklist above into your PR description
+2. Complete each item and mark with `[x]` when done
+3. Attach evidence (command outputs, screenshots) for quality checks
+4. Include rationale for changes and impact assessment
+
+---
+
 ## References
 
 - **AGENTS.md – open format overview and examples.** ([agents.md][2], [GitHub][3])
